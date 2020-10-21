@@ -2,6 +2,7 @@ package com.pzh.mall.module.controller;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.pzh.mall.common.ResultMsg;
 import com.pzh.mall.module.domain.Student;
 import com.pzh.mall.module.service.StudentService;
 import org.slf4j.Logger;
@@ -30,18 +31,37 @@ public class StudentController {
 
     @RequestMapping( value = "/queryStudentBySno", method = RequestMethod.GET)
     @ResponseBody
-    public Student queryStudentBySno(String sno) {
+    public ResultMsg queryStudentBySno(String sno) {
         LOGGER.info("根据学号查询学生 sno:" + sno);
-        return this.studentService.queryStudentBySno(sno);
+        ResultMsg resultMsg = new ResultMsg();
+        try {
+            Student student = studentService.queryStudentBySno(sno);
+            resultMsg.setData(student);
+        } catch (Exception e) {
+            e.printStackTrace();
+            resultMsg.setCode(-1);
+            resultMsg.setMessage("请求失败");
+        }
+
+        return resultMsg;
     }
 
     @RequestMapping( value = "/listForPage", method = RequestMethod.GET)
     @ResponseBody
-    public List<Student> listForPage(int pageNum, int pageSize) {
+    public ResultMsg listForPage(int pageNum, int pageSize) {
         LOGGER.info("分页列表 pageNum:" + pageNum + " pageSize:" + pageSize);
-        PageHelper.startPage(pageNum, pageSize);
-        List<Student> list = studentService.queryAllStudents();
-        PageInfo<Student> pageInfo = new PageInfo<>(list);
-        return pageInfo.getList();
+        ResultMsg resultMsg = new ResultMsg();
+        try {
+            PageHelper.startPage(pageNum, pageSize);
+            List<Student> list = studentService.queryAllStudents();
+            PageInfo<Student> pageInfo = new PageInfo<>(list);
+            resultMsg.setData(pageInfo.getList());
+        } catch (Exception e) {
+            e.printStackTrace();
+            resultMsg.setCode(-1);
+            resultMsg.setMessage("请求失败");
+        }
+
+        return resultMsg;
     }
 }

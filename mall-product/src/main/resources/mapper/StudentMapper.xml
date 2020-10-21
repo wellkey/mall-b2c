@@ -8,19 +8,19 @@
     </resultMap>
 
     <insert id="add" parameterType="com.pzh.mall.module.domain.Student">
-        INSERT INTO uc_student(student_no, student_name, sex) VALUES(#{sno}, #{name}, #{ssex});
+        INSERT INTO uc_student(student_no, student_name, sex) VALUES(#{sno}, #{name}, #{ssex})
     </insert>
 
     <update id="update" parameterType="com.pzh.mall.module.domain.Student">
-        UPDATE uc_student t SET t.student_name = #{name}, t.sex = #{ssex} WHERE t.student_no = #{sno};
+        UPDATE uc_student t SET t.student_name = #{name}, t.sex = #{ssex} WHERE t.student_no = #{sno}
     </update>
 
     <delete id="deleteBySno">
-        DELETE uc_student t WHERE t.student_no = #{sno};
+        DELETE uc_student t WHERE t.student_no = #{sno}
     </delete>
 
     <select id="queryStudentBySno" resultMap="BaseResultMap">
-        SELECT * FROM uc_student t WHERE t.student_no = #{sno};
+        SELECT * FROM uc_student t WHERE t.student_no = #{sno}
     </select>
 
     <select id="queryAllStudents" resultMap="BaseResultMap">
