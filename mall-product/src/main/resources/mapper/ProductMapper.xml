@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pzh.mall.module.dao.ProductDao">
+    <resultMap id="BaseResultMap" type="com.pzh.mall.module.domain.Product">
+        <result column="name" jdbcType="VARCHAR" property="name" />
+        <result column="pic" jdbcType="VARCHAR" property="pic" />
+        <result column="brandName" jdbcType="VARCHAR" property="brandName" />
+        <result column="logo" jdbcType="VARCHAR" property="logo" />
+        <result column="categoryId" jdbcType="INTEGER" property="categoryId" />
+        <result column="categoryName" jdbcType="VARCHAR" property="categoryName" />
+        <result column="productNo" jdbcType="VARCHAR" property="productNo" />
+        <result column="attributeValue" jdbcType="VARCHAR" property="attributeValue" />
+        <result column="price" jdbcType="DOUBLE" property="price" />
+        <result column="description" jdbcType="VARCHAR" property="description" />
+        <result column="deleteStatus" jdbcType="INTEGER" property="deleteStatus" />
+        <result column="verifyStatus" jdbcType="INTEGER" property="verifyStatus" />
+        <result column="publishStatus" jdbcType="INTEGER" property="publishStatus" />
+        <result column="sort" jdbcType="INTEGER" property="sort" />
+    </resultMap>
+
+    <select id="listForPage" resultMap="BaseResultMap">
+        select a.id, a.`name`, a.pic, b.id brandId, b.`name` brandName, c.id categoryId, c.`name` categoryName, d.product_no productNo, d.`value` attributeValue, d.price, a.description, a.delete_status deleteStatus, a.verify_status  verifyStatus, a.publish_status publishStatus, d.sort
+        from pms_product a LEFT JOIN pms_brand b on a.brand_id = b.id LEFT JOIN pms_category c on a.category_id = c.id LEFT JOIN pms_price d on a.id = d.product_id
+        where a.delete_status = 0
+    </select>
+
+</mapper>

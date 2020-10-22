@@ -26,14 +26,23 @@ public class Product implements Serializable {
     @ApiModelProperty(value = "品牌id")
     private Long brandId;
 
+    @ApiModelProperty(value = "品牌名")
+    private String brandName;
+
     @ApiModelProperty(value = "分类id")
     private Long categoryId;
 
-    @ApiModelProperty(value = "属性id")
-    private Long attributeId;
+    @ApiModelProperty(value = "分类名")
+    private String categoryName;
+
+    @ApiModelProperty(value = "货号")
+    private String productNo;
+
+    @ApiModelProperty(value = "属性值")
+    private String  attributeValue;
 
     @ApiModelProperty(value = "商品价格")
-    private BigDecimal price;
+    private Double price;
 
     @ApiModelProperty(value = "商品描述")
     private String description;
@@ -82,6 +91,14 @@ public class Product implements Serializable {
         this.brandId = brandId;
     }
 
+    public String getBrandName() {
+        return brandName;
+    }
+
+    public void setBrandName(String brandName) {
+        this.brandName = brandName;
+    }
+
     public Long getCategoryId() {
         return categoryId;
     }
@@ -90,19 +107,35 @@ public class Product implements Serializable {
         this.categoryId = categoryId;
     }
 
-    public Long getAttributeId() {
-        return attributeId;
+    public String getCategoryName() {
+        return categoryName;
     }
 
-    public void setAttributeId(Long attributeId) {
-        this.attributeId = attributeId;
+    public void setCategoryName(String categoryName) {
+        this.categoryName = categoryName;
     }
 
-    public BigDecimal getPrice() {
+    public String getProductNo() {
+        return productNo;
+    }
+
+    public void setProductNo(String productNo) {
+        this.productNo = productNo;
+    }
+
+    public String getAttributeValue() {
+        return attributeValue;
+    }
+
+    public void setAttributeValue(String attributeValue) {
+        this.attributeValue = attributeValue;
+    }
+
+    public Double getPrice() {
         return price;
     }
 
-    public void setPrice(BigDecimal price) {
+    public void setPrice(Double price) {
         this.price = price;
     }
 
@@ -153,8 +186,11 @@ public class Product implements Serializable {
                 ", name='" + name + '\'' +
                 ", pic='" + pic + '\'' +
                 ", brandId=" + brandId +
+                ", brandName='" + brandName + '\'' +
                 ", categoryId=" + categoryId +
-                ", attributeId=" + attributeId +
+                ", categoryName='" + categoryName + '\'' +
+                ", productNo='" + productNo + '\'' +
+                ", attributeValue='" + attributeValue + '\'' +
                 ", price=" + price +
                 ", description='" + description + '\'' +
                 ", deleteStatus=" + deleteStatus +
