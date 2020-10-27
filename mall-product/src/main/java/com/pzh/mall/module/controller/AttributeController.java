@@ -12,6 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
  */
 @Api(tags = "ProductAttributeController", description = "商品属性管理")
 @Controller
-@RequestMapping("/product/attribute")
+@RequestMapping("/attribute")
 public class AttributeController {
 }

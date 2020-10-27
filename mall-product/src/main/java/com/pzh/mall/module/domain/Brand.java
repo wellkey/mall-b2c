@@ -1,5 +1,6 @@
 package com.pzh.mall.module.domain;
 
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
@@ -10,6 +11,7 @@ import java.io.Serializable;
  * @Date 2020/10/21 15:09
  * @Version 1.0
  */
+@ApiModel(value = "品牌对象模型")
 public class Brand implements Serializable {
     private static final long serialVersionUID = 3761421851521171783L;
 
@@ -21,7 +23,6 @@ public class Brand implements Serializable {
 
     @ApiModelProperty(value = "品牌logo")
     private String logo;
-
 
     @ApiModelProperty(value = "排序")
     private Integer sort;

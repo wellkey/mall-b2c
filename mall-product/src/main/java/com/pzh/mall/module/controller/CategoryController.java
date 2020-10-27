@@ -12,6 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
  */
 @Api(tags = "ProductCategoryController", description = "商品分类管理")
 @Controller
-@RequestMapping("/product/category")
+@RequestMapping("/category")
 public class CategoryController {
 }
