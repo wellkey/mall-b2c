@@ -5,14 +5,11 @@ import com.github.pagehelper.PageInfo;
 import com.pzh.mall.common.ResultMsg;
 import com.pzh.mall.module.domain.Category;
 import com.pzh.mall.module.service.CategoryService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
-import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,29 +20,32 @@ import java.util.List;
  * @Date 2020/7/15 16:05
  * @Version 1.0
  */
-@Api(tags = "CategoryController", description = "商品分类管理")
 @Controller
 @RequestMapping("/category")
 public class CategoryController {
-    private static final Logger LOGGER = LoggerFactory.getLogger(BrandController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(CategoryController.class);
 
     @Autowired
     private CategoryService categoryService;
 
-    @ApiOperation(value = "获取分类列表", notes = "获取分类列表")
-    @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "query", name = "pageNum", value = "第几页", dataType = "Integer", required = true),
-            @ApiImplicitParam(paramType = "query", name = "pageSize", value = "页大小", dataType = "Integer", required = true)
-    })
-    @GetMapping("/listForPage")
-    public ResultMsg listForPage(@RequestParam int pageNum, @RequestParam int pageSize) {
-        LOGGER.info("分页列表 pageNum:" + pageNum + " pageSize:" + pageSize);
+    @RequestMapping("/index")
+    public String index(Model model) {
+        LOGGER.info("进入分类管理首页");
+
+        return "category";
+    }
+
+    @RequestMapping("/listForPage")
+    @ResponseBody
+    public ResultMsg listForPage(@RequestParam int page, @RequestParam int limit) {
+        LOGGER.info("分页列表 page:" + page + " limit:" + limit);
         ResultMsg resultMsg = new ResultMsg();
         try {
-            PageHelper.startPage(pageNum, pageSize);
+            PageHelper.startPage(page, limit);
             List<Category> list = categoryService.list();
             PageInfo<Category> pageInfo = new PageInfo<>(list);
             resultMsg.setData(pageInfo.getList());
+            resultMsg.setCount(pageInfo.getTotal());
         } catch (Exception e) {
             e.printStackTrace();
             resultMsg.setCode(-1);
@@ -55,9 +55,8 @@ public class CategoryController {
         return resultMsg;
     }
 
-    @ApiOperation(value = "获取分类信息", notes = "根据分类id获取分类信息")
-    @ApiImplicitParam(name = "id", value = "分类id", required = true, dataType = "Long")
-    @GetMapping("/read/{id}")
+    @RequestMapping("/read/{id}")
+    @ResponseBody
     public ResultMsg read(@PathVariable long id) {
         LOGGER.info("id:" + id);
         ResultMsg resultMsg = new ResultMsg();
@@ -73,10 +72,9 @@ public class CategoryController {
         return resultMsg;
     }
 
-    @ApiOperation(value = "新增分类信息", notes = "新增分类信息")
-    @ApiImplicitParam(name = "category", value = "分类", required = true, dataType = "Category")
-    @PostMapping("/add")
-    public ResultMsg add(@RequestBody Category category) {
+    @RequestMapping("/add")
+    @ResponseBody
+    public ResultMsg add(Category category) {
         LOGGER.info("Category:" + category);
         ResultMsg resultMsg = new ResultMsg();
         try {
@@ -90,10 +88,9 @@ public class CategoryController {
         return resultMsg;
     }
 
-    @ApiOperation(value = "修改分类信息", notes = "修改分类信息")
-    @ApiImplicitParam(name = "category", value = "分类", required = true, dataType = "Category")
-    @PutMapping("/edit")
-    public ResultMsg edit(@RequestBody Category category) {
+    @RequestMapping("/edit")
+    @ResponseBody
+    public ResultMsg edit(Category category) {
         LOGGER.info("Category:" + category);
         ResultMsg resultMsg = new ResultMsg();
         try {
@@ -107,9 +104,8 @@ public class CategoryController {
         return resultMsg;
     }
 
-    @ApiOperation(value = "删除分类信息", notes = "根据id删除分类信息")
-    @ApiImplicitParam(name = "id", value = "分类id", required = true, dataType = "Long")
-    @DeleteMapping("/remove/{id}")
+    @RequestMapping("/remove/{id}")
+    @ResponseBody
     public ResultMsg remove(@PathVariable long id) {
         LOGGER.info("id:" + id);
         ResultMsg resultMsg = new ResultMsg();

@@ -33,7 +33,7 @@ public class BrandController {
     public String index(Model model) {
         LOGGER.info("进入品牌管理首页");
 
-        return "index";
+        return "brand";
     }
 
     @RequestMapping("/listForPage")
