@@ -10,20 +10,22 @@ public class ResultMsg<T> {
     private final Integer DEFAULT_CODE = 0;
     private final String DEFAULT_MSG = "请求成功";
 
-    public Integer code;
+    private Integer code;
 
-    public String message;
+    private String msg;
 
-    public T data;
+    private T data;
+
+    private Long count;
 
     public ResultMsg() {
         this.code = DEFAULT_CODE;
-        this.message = DEFAULT_MSG;
+        this.msg = DEFAULT_MSG;
     }
 
-    public ResultMsg(Integer code, String message) {
+    public ResultMsg(Integer code, String msg) {
         this.code = code;
-        this.message = message;
+        this.msg = msg;
     }
 
     public ResultMsg(T data) {
@@ -39,12 +41,12 @@ public class ResultMsg<T> {
         this.code = code;
     }
 
-    public String getMessage() {
-        return message;
+    public String getMsg() {
+        return msg;
     }
 
-    public void setMessage(String message) {
-        this.message = message;
+    public void setMsg(String msg) {
+        this.msg = msg;
     }
 
     public T getData() {
@@ -53,5 +55,13 @@ public class ResultMsg<T> {
 
     public void setData(T data) {
         this.data = data;
+    }
+
+    public Long getCount() {
+        return count;
+    }
+
+    public void setCount(Long count) {
+        this.count = count;
     }
 }

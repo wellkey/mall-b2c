@@ -1,6 +1,5 @@
 server:
-    servlet:
-      context-path: /product
+  context-path: /product
 
 spring:
   datasource:
@@ -14,6 +13,8 @@ spring:
       max-active: 3
       # 连接等待超时时间
       max-wait: 10000
+  thymeleaf:
+    cache: false
 
 #pagehelper
 pagehelper:

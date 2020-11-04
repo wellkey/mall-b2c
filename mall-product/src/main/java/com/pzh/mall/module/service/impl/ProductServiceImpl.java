@@ -1,7 +1,6 @@
 package com.pzh.mall.module.service.impl;
 
 import com.pzh.mall.module.dao.ProductDao;
-import com.pzh.mall.module.dao.StudentDao;
 import com.pzh.mall.module.domain.Product;
 import com.pzh.mall.module.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;

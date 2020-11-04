@@ -1,7 +1,5 @@
 package com.pzh.mall.module.domain;
 
-import io.swagger.annotations.ApiModelProperty;
-
 import java.io.Serializable;
 import java.util.List;
 
@@ -14,16 +12,12 @@ import java.util.List;
 public class Attribute implements Serializable {
     private static final long serialVersionUID = 2186437324848557416L;
 
-    @ApiModelProperty(value = "属性id")
     private Long id;
 
-    @ApiModelProperty(value = "属性名")
     private String name;
 
-    @ApiModelProperty(value = "属性列表")
     private List<String> attrList;
 
-    @ApiModelProperty(value = "排序")
     private Integer sort;
 
     public Long getId() {

@@ -1,7 +1,5 @@
 package com.pzh.mall.module.domain;
 
-import io.swagger.annotations.ApiModelProperty;
-
 import java.io.Serializable;
 
 /**
@@ -13,19 +11,14 @@ import java.io.Serializable;
 public class Category implements Serializable {
     private static final long serialVersionUID = -9096946273042637057L;
 
-    @ApiModelProperty(value = "分类id")
     private Long id;
 
-    @ApiModelProperty(value = "分类名")
     private String name;
 
-    @ApiModelProperty(value = "分类层级")
     private Integer level;
 
-    @ApiModelProperty(value = "单位名称")
     private String unit;
 
-    @ApiModelProperty(value = "排序")
     private Integer sort;
 
     public Long getId() {

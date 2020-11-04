@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * @Date 2020/7/15 16:07
  * @Version 1.0
  */
-@Api(tags = "ProductAttributeController", description = "商品属性管理")
+@Api(tags = "AttributeController", description = "商品属性管理")
 @Controller
 @RequestMapping("/attribute")
 public class AttributeController {

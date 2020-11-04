@@ -21,8 +21,8 @@ public class BrandServiceImpl implements BrandService {
     private BrandDao brandDao;
 
     @Override
-    public List<Brand> list() {
-        return brandDao.list();
+    public List<Brand> list(String name) {
+        return brandDao.list(name);
     }
 
     @Override

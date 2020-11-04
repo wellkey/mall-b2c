@@ -1,9 +1,6 @@
 package com.pzh.mall.module.domain;
 
-import io.swagger.annotations.ApiModelProperty;
-
 import java.io.Serializable;
-import java.math.BigDecimal;
 
 /**
  * @Description TODO
@@ -14,49 +11,34 @@ import java.math.BigDecimal;
 public class Product implements Serializable {
     private static final long serialVersionUID = 4917842326479126732L;
 
-    @ApiModelProperty(value = "id")
     private Long id;
 
-    @ApiModelProperty(value = "商品名称")
     private String name;
 
-    @ApiModelProperty(value = "商品图片")
     private String pic;
 
-    @ApiModelProperty(value = "品牌id")
     private Long brandId;
 
-    @ApiModelProperty(value = "品牌名")
     private String brandName;
 
-    @ApiModelProperty(value = "分类id")
     private Long categoryId;
 
-    @ApiModelProperty(value = "分类名")
     private String categoryName;
 
-    @ApiModelProperty(value = "货号")
     private String productNo;
 
-    @ApiModelProperty(value = "属性值")
     private String  attributeValue;
 
-    @ApiModelProperty(value = "商品价格")
     private Double price;
 
-    @ApiModelProperty(value = "商品描述")
     private String description;
 
-    @ApiModelProperty(value = "删除状态：0->未删除；1->已删除")
     private Integer deleteStatus;
 
-    @ApiModelProperty(value = "审核状态：0->未审核；1->审核通过")
     private Integer verifyStatus;
 
-    @ApiModelProperty(value = "上架状态：0->下架；1->上架")
     private Integer publishStatus;
 
-    @ApiModelProperty(value = "排序")
     private Integer sort;
 
     public Long getId() {

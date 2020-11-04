@@ -44,7 +44,7 @@ public class ProductController {
         } catch (Exception e) {
             e.printStackTrace();
             resultMsg.setCode(-1);
-            resultMsg.setMessage("请求失败");
+            resultMsg.setMsg("请求失败");
         }
 
         return resultMsg;

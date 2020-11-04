@@ -12,7 +12,7 @@ import java.util.List;
  */
 public interface BrandService {
 
-    List<Brand> list();
+    List<Brand> list(String name);
 
     Brand read(long id);
 

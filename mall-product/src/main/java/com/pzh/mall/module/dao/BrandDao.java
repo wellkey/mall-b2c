@@ -2,6 +2,7 @@ package com.pzh.mall.module.dao;
 
 import com.pzh.mall.module.domain.Brand;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -14,7 +15,7 @@ import java.util.List;
 @Mapper
 public interface BrandDao {
 
-    List<Brand> list();
+    List<Brand> list(@Param("name") String name);
 
     Brand read(long id);
 

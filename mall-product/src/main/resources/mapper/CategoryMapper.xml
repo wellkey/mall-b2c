@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pzh.mall.module.dao.CategoryDao">
+    <select id="list" resultType="com.pzh.mall.module.domain.Category">
+        SELECT t.id, t.`name`, t.`level`, t.unit, t.sort FROM pms_category t
+    </select>
+
+    <select id="read" resultType="com.pzh.mall.module.domain.Category">
+        SELECT t.id, t.`name`, t.`level`, t.unit, t.sort FROM pms_category t WHERE t.id = #{id}
+    </select>
+
+    <insert id="add" parameterType="com.pzh.mall.module.domain.Category" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO pms_category(name, level, unit) VALUES (#{name}, #{level}, #{unit})
+    </insert>
+
+    <update id="edit" parameterType="com.pzh.mall.module.domain.Category">
+        UPDATE pms_category t SET t.`name` = #{name}, t.level = #{level}, t.unit = #{unit} WHERE t.id = #{id}
+    </update>
+
+    <delete id="remove">
+        DELETE FROM pms_category t WHERE t.id = #{id}
+    </delete>
+
+</mapper>

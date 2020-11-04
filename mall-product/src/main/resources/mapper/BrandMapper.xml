@@ -3,6 +3,9 @@
 <mapper namespace="com.pzh.mall.module.dao.BrandDao">
     <select id="list" resultType="com.pzh.mall.module.domain.Brand">
         SELECT t.id, t.`name`, t.logo, t.sort FROM pms_brand t
+        <if test="name != null">
+            WHERE t.`name` LIKE "%"#{name}"%"
+        </if>
     </select>
 
     <select id="read" resultType="com.pzh.mall.module.domain.Brand">
@@ -18,7 +21,7 @@
     </update>
 
     <delete id="remove">
-        DELETE FROM pms_brand t WHERE t.id = #{id}
+        DELETE FROM pms_brand WHERE id = #{id}
     </delete>
 
 </mapper>
