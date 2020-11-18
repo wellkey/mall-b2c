@@ -12,7 +12,7 @@ import java.util.List;
  */
 public interface CategoryService {
 
-    List<Category> list();
+    List<Category> list(int level, long parId);
 
     Category read(long id);
 

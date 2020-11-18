@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
     <head>
         <meta charset="UTF-8" />
-        <title>分类管理</title>
+        <title>商品管理</title>
         <link th:href="@{../layui/css/layui.css}" rel="stylesheet" />
         <link th:href="@{../css/common.css}" rel="stylesheet" />
 
@@ -13,48 +13,29 @@
     <body>
         <div class="myPage">
             <div class="myTable">
-                分类名：
+                商品名：
                 <div class="layui-inline">
-                    <input type="text" autocomplete="off" class="layui-input" id="name" placeholder="请输入分类名称"/>
+                    <input type="text" autocomplete="off" class="layui-input" id="name" placeholder="请输入商品名称"/>
                 </div>
                 <button class="layui-btn" data-type="reload"><i class="layui-icon">&#xe615;</i>搜索</button>
 
                 <button class="layui-btn" data-type="add">新增</button>
             </div>
-            <table class="layui-hide" id="categoryTable" lay-filter="category"></table>
+            <table class="layui-hide" id="productTable" lay-filter="product"></table>
         </div>
 
         <!-- 新增 -->
         <form id="addMask" class="layui-form" lay-filter="addMask" style="display: none; padding: 40px 0;">
             <div class="layui-form-item layui-form-text">
-                <label class="layui-form-label">分类名：</label>
+                <label class="layui-form-label">商品名：</label>
                 <div class="layui-inline">
-                    <input type="text" class="layui-input" id="categoryName"/>
+                    <input type="text" class="layui-input" id="productName"/>
                 </div>
             </div>
             <div class="layui-form-item layui-form-text">
-                <label class="layui-form-label">上级分类：</label>
-                <div class="layui-input-block selectBox">
-                    <select id="parLevel">
-                        <option value="1">手机数码</option>
-                        <option value="2">服装配饰</option>
-                    </select>
-                </div>
-            </div>
-            <div class="layui-form-item layui-form-text">
-                <label class="layui-form-label">分类层级：</label>
-                <div class="layui-input-block selectBox">
-                    <select id="orderType">
-                        <option value="1">1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                    </select>
-                </div>
-            </div>
-            <div class="layui-form-item layui-form-text">
-                <label class="layui-form-label">单位：</label>
+                <label class="layui-form-label">商品logo：</label>
                 <div class="layui-inline">
-                    <input type="text" class="layui-input" id="categoryUnit"/>
+                    <input type="text" class="layui-input" id="productLogo"/>
                 </div>
             </div>
         </form>
@@ -77,7 +58,7 @@
             // 表格数据载入
             console.log("ctx:", ctx);
             table.render({
-                elem: '#categoryTable',
+                elem: '#productTable',
                 url: 'listForPage',
                 method: 'post', //方式
                 page: true, //开启分页
@@ -95,18 +76,43 @@
                         templet: function (d) {
                             return d.LAY_TABLE_INDEX + 1
                         }
-                    }, {
+                    }, { //a.id, a.`name`, a.pic, b.id brandId, b.`name` brandName, c.id categoryId, c.`name` categoryName, d.product_no productNo, d.`value` attributeValue, d.price, a.description,
+                    // a.delete_status deleteStatus, a.verify_status  verifyStatus, a.publish_status publishStatus
                         field: 'name',
-                        title: '分类名称',
+                        title: '商品名称',
+                        width: 150
+                    }, {
+                        field: 'pic',
+                        title: '商品图片',
                         width: 120
                     }, {
-                        field: 'level',
-                        title: '分类层级',
+                        field: 'brandName',
+                        title: '品牌',
+                        width: 80
+                    }, {
+                        field: 'categoryName',
+                        title: '分类',
+                        width: 80
+                    }, {
+                        field: 'productNo',
+                        title: '货号',
+                        width: 80
+                    }, {
+                        field: 'productSpecs',
+                        title: '属性',
                         width: 120
                     }, {
-                        field: 'unit',
-                        title: '计量单位',
-                        width: 120
+                        field: 'description',
+                        title: '描述',
+                        width: 200
+                    }, {
+                        field: 'price',
+                        title: '价格',
+                        width: 80
+                    }, {
+                        field: 'deleteStatus',
+                        title: '状态',
+                        width: 80
                     }, {
                         title: '操作',
                         toolbar: '#optBar',
@@ -131,7 +137,7 @@
                     layer.open({
                         type: 1,
                         area: '400px',
-                        title: '新增分类',
+                        title: '新增商品',
                         btn: ['确定', '取消'],
                         shadeClose: true,
                         shade: 0,
@@ -143,9 +149,8 @@
                                 type: "POST",
                                 url: 'add',
                                 data: {
-                                    name: $('#categoryName').val(),
-                                    level: $('#categoryAttribute').val(),
-                                    unit: $('#categoryUnit').val()
+                                    name: $('#productName').val(),
+                                    logo: $('#productLogo').val()
                                 },
                                 dataType: "JSON",
                                 success: function(data){
@@ -186,7 +191,7 @@
             });
 
             //监听行工具事件
-            table.on('tool(category)', function(obj){
+            table.on('tool(product)', function(obj){
                 var data = obj.data;
                 console.log("ctx:", ctx);
                 if(obj.event === 'del'){
@@ -224,16 +229,15 @@
                     layer.open({
                         type: 1,
                         area: '400px',
-                        title: '编辑分类',
+                        title: '编辑商品',
                         btn: ['确定', '取消'],
                         shadeClose: true,
                         shade: 0,
                         maxmin: true,
                         content:$('#addMask'),
                         success:function(index, layero){
-                            $("#categoryName").val(data.name);
-                            $("#categoryAttribute").val(data.level);
-                            $("#categoryUnit").val(data.unit);
+                            $("#productName").val(data.name);
+                            $("#productLogo").val(data.logo);
                         },
                         yes:function(index, layero){
                             /*  $.ajaxSettings.async = false; */
@@ -242,9 +246,8 @@
                                 url: 'edit',
                                 data: {
                                     id: data.id,
-                                    name: $('#categoryName').val(),
-                                    level: $('#categoryAttribute').val(),
-                                    unit: $('#categoryUnit').val()
+                                    name: $('#productName').val(),
+                                    logo: $('#productLogo').val()
                                 },
                                 dataType: "JSON",
                                 success: function(data){

@@ -2,6 +2,7 @@ package com.pzh.mall.module.dao;
 
 import com.pzh.mall.module.domain.Category;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -14,7 +15,7 @@ import java.util.List;
 @Mapper
 public interface CategoryDao {
 
-    List<Category> list();
+    List<Category> list(@Param("level")int level, @Param("parId")long parId);
 
     Category read(long id);
 

@@ -15,11 +15,11 @@ public class Category implements Serializable {
 
     private String name;
 
+    private Long parId;
+
     private Integer level;
 
     private String unit;
-
-    private Integer sort;
 
     public Long getId() {
         return id;
@@ -37,6 +37,14 @@ public class Category implements Serializable {
         this.name = name;
     }
 
+    public Long getParId() {
+        return parId;
+    }
+
+    public void setParId(Long parId) {
+        this.parId = parId;
+    }
+
     public Integer getLevel() {
         return level;
     }
@@ -51,24 +59,5 @@ public class Category implements Serializable {
 
     public void setUnit(String unit) {
         this.unit = unit;
-    }
-
-    public Integer getSort() {
-        return sort;
-    }
-
-    public void setSort(Integer sort) {
-        this.sort = sort;
-    }
-
-    @Override
-    public String toString() {
-        return "Category{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", level=" + level +
-                ", unit='" + unit + '\'' +
-                ", sort=" + sort +
-                '}';
     }
 }

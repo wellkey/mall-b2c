@@ -1,7 +1,6 @@
 package com.pzh.mall.module.domain;
 
 import java.io.Serializable;
-import java.util.List;
 
 /**
  * @Description TODO
@@ -16,9 +15,11 @@ public class Attribute implements Serializable {
 
     private String name;
 
-    private List<String> attrList;
+    private Long categoryId;
 
-    private Integer sort;
+    private String categoryName;
+
+    private Integer level;
 
     public Long getId() {
         return id;
@@ -36,20 +37,28 @@ public class Attribute implements Serializable {
         this.name = name;
     }
 
-    public List<String> getAttrList() {
-        return attrList;
+    public Long getCategoryId() {
+        return categoryId;
     }
 
-    public void setAttrList(List<String> attrList) {
-        this.attrList = attrList;
+    public void setCategoryId(Long categoryId) {
+        this.categoryId = categoryId;
     }
 
-    public Integer getSort() {
-        return sort;
+    public String getCategoryName() {
+        return categoryName;
     }
 
-    public void setSort(Integer sort) {
-        this.sort = sort;
+    public void setCategoryName(String categoryName) {
+        this.categoryName = categoryName;
+    }
+
+    public Integer getLevel() {
+        return level;
+    }
+
+    public void setLevel(Integer level) {
+        this.level = level;
     }
 
     @Override
@@ -57,8 +66,9 @@ public class Attribute implements Serializable {
         return "Attribute{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", attrList=" + attrList +
-                ", sort=" + sort +
+                ", categoryId=" + categoryId +
+                ", categoryName='" + categoryName + '\'' +
+                ", level=" + level +
                 '}';
     }
 }

@@ -42,7 +42,7 @@ public class CategoryController {
         ResultMsg resultMsg = new ResultMsg();
         try {
             PageHelper.startPage(page, limit);
-            List<Category> list = categoryService.list();
+            List<Category> list = categoryService.list(1, 0);
             PageInfo<Category> pageInfo = new PageInfo<>(list);
             resultMsg.setData(pageInfo.getList());
             resultMsg.setCount(pageInfo.getTotal());
@@ -111,6 +111,24 @@ public class CategoryController {
         ResultMsg resultMsg = new ResultMsg();
         try {
             categoryService.remove(id);
+        } catch (Exception e) {
+            e.printStackTrace();
+            resultMsg.setCode(-1);
+            resultMsg.setMsg("请求失败");
+        }
+
+        return resultMsg;
+    }
+
+    @RequestMapping("/listByLevel")
+    @ResponseBody
+    public ResultMsg listByLevel(@RequestParam int level, @RequestParam long parId) {
+        LOGGER.info("根据层级列出所有分类 level:" + level + " parId:" + parId);
+        ResultMsg resultMsg = new ResultMsg();
+        try {
+            List<Category> list = categoryService.list(level, parId);
+            resultMsg.setData(list);
+            resultMsg.setCount((long) list.size());
         } catch (Exception e) {
             e.printStackTrace();
             resultMsg.setCode(-1);

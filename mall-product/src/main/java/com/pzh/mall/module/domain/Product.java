@@ -25,12 +25,6 @@ public class Product implements Serializable {
 
     private String categoryName;
 
-    private String productNo;
-
-    private String  attributeValue;
-
-    private Double price;
-
     private String description;
 
     private Integer deleteStatus;
@@ -39,7 +33,11 @@ public class Product implements Serializable {
 
     private Integer publishStatus;
 
-    private Integer sort;
+    private String productNo;
+
+    private String  productSpecs;
+
+    private Double price;
 
     public Long getId() {
         return id;
@@ -97,30 +95,6 @@ public class Product implements Serializable {
         this.categoryName = categoryName;
     }
 
-    public String getProductNo() {
-        return productNo;
-    }
-
-    public void setProductNo(String productNo) {
-        this.productNo = productNo;
-    }
-
-    public String getAttributeValue() {
-        return attributeValue;
-    }
-
-    public void setAttributeValue(String attributeValue) {
-        this.attributeValue = attributeValue;
-    }
-
-    public Double getPrice() {
-        return price;
-    }
-
-    public void setPrice(Double price) {
-        this.price = price;
-    }
-
     public String getDescription() {
         return description;
     }
@@ -153,32 +127,27 @@ public class Product implements Serializable {
         this.publishStatus = publishStatus;
     }
 
-    public Integer getSort() {
-        return sort;
+    public String getProductNo() {
+        return productNo;
     }
 
-    public void setSort(Integer sort) {
-        this.sort = sort;
+    public void setProductNo(String productNo) {
+        this.productNo = productNo;
     }
 
-    @Override
-    public String toString() {
-        return "Product{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", pic='" + pic + '\'' +
-                ", brandId=" + brandId +
-                ", brandName='" + brandName + '\'' +
-                ", categoryId=" + categoryId +
-                ", categoryName='" + categoryName + '\'' +
-                ", productNo='" + productNo + '\'' +
-                ", attributeValue='" + attributeValue + '\'' +
-                ", price=" + price +
-                ", description='" + description + '\'' +
-                ", deleteStatus=" + deleteStatus +
-                ", verifyStatus=" + verifyStatus +
-                ", publishStatus=" + publishStatus +
-                ", sort=" + sort +
-                '}';
+    public String getProductSpecs() {
+        return productSpecs;
+    }
+
+    public void setProductSpecs(String productSpecs) {
+        this.productSpecs = productSpecs;
+    }
+
+    public Double getPrice() {
+        return price;
+    }
+
+    public void setPrice(Double price) {
+        this.price = price;
     }
 }
