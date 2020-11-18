@@ -25,7 +25,7 @@ import java.util.List;
  */
 @Api(tags = "ProductController", description = "商品管理")
 @Controller
-@RequestMapping("/pro1")
+@RequestMapping("/pro")
 public class ProductController {
     private static final Logger LOGGER = LoggerFactory.getLogger(ProductController.class);
 

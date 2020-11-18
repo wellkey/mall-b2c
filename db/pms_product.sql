@@ -10,13 +10,13 @@ Target Server Type    : MYSQL
 Target Server Version : 50732
 File Encoding         : 65001
 
-Date: 2020-10-22 17:44:34
+Date: 2020-11-18 15:24:27
 */
 
 SET FOREIGN_KEY_CHECKS=0;
 
 -- ----------------------------
--- Table structure for `pms_product`
+-- Table structure for pms_product
 -- ----------------------------
 DROP TABLE IF EXISTS `pms_product`;
 CREATE TABLE `pms_product` (
@@ -29,14 +29,12 @@ CREATE TABLE `pms_product` (
   `delete_status` tinyint(1) DEFAULT '0' COMMENT '删除标志 0：未删除 1：已删除',
   `verify_status` tinyint(1) DEFAULT '0' COMMENT '审核标志 0：未审核 1：已审核',
   `publish_status` tinyint(1) DEFAULT '0' COMMENT '上架标志 0：未上架 1：已上架',
-  `sort` int(10) DEFAULT NULL COMMENT '排序字段',
   `insert_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '插入时间',
-  `update_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of pms_product
 -- ----------------------------
-INSERT INTO `pms_product` VALUES ('1', '华为 HUAWEI P20', 'default url', '1', '1', '眼界大开', '0', '0', '0', '1', '2020-10-22 14:08:14', '2020-10-22 16:45:11');
-INSERT INTO `pms_product` VALUES ('2', '小米8', 'default url', '2', '1', '全面屏游戏智能手机', '0', '0', '0', '2', '2020-10-22 16:45:35', '2020-10-22 17:38:13');
+INSERT INTO `pms_product` VALUES ('1', '华为 HUAWEI P20', '', '1', '1007', '眼界大开', '0', '0', '0', '2020-10-22 14:08:14');
+INSERT INTO `pms_product` VALUES ('2', '小米8', '', '2', '1007', '全面屏游戏智能手机', '0', '0', '0', '2020-10-22 16:45:35');
