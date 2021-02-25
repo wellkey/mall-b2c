@@ -2,48 +2,65 @@
 <html xmlns:th="http://www.thymeleaf.org">
     <head>
         <meta charset="UTF-8" />
-        <title>品牌管理</title>
+        <title>新增商品</title>
         <link th:href="@{~/product/favicon.ico}" rel="shortcut icon">
-        <link th:href="@{../layui/css/layui.css}" rel="stylesheet" />
-        <link th:href="@{../css/common.css}" rel="stylesheet" />
+        <link th:href="@{~/product/layui/css/layui.css}" rel="stylesheet" />
+        <link th:href="@{~/product/css/common.css}" rel="stylesheet" />
 
-        <script th:src="@{../jquery/jquery-2.1.4.min.js}"></script>
-        <script th:src="@{../layui/layui.js}"></script>
+        <script th:src="@{~/product/jquery/jquery-2.1.4.min.js}"></script>
+        <script th:src="@{~/product/layui/layui.js}"></script>
+        <script th:inline="javascript">
+            console.log([[${attributeList}]])
+        </script>
     </head>
 
     <body>
         <div class="myPage">
             <div class="myTable">
-                品牌名：
+                商品货号：
                 <div class="layui-inline">
-                    <input type="text" autocomplete="off" class="layui-input" id="name" placeholder="请输入品牌名称"/>
+                    <input type="text" autocomplete="off" class="layui-input" id="proNo" placeholder="请输入货号"/>
                 </div>
-                <button class="layui-btn" data-type="reload">搜索</button>
-
+                <button class="layui-btn" data-type="reload">查询</button>
                 <button class="layui-btn" data-type="add">新增</button>
+
+                <button class="layui-btn" id="back" style="float: right">返回</button>
             </div>
-            <table class="layui-hide" id="brandTable" lay-filter="brand"></table>
+            <table class="layui-hide" id="skuTable" lay-filter="sku"></table>
         </div>
 
         <!-- 新增 -->
         <form id="addMask" class="layui-form" lay-filter="addMask" style="display: none; padding: 40px 0;">
-            <div class="layui-form-item layui-form-text">
-                <label class="layui-form-label">品牌名：</label>
+            <div class="layui-form-item">
+                <label class="layui-form-label">货号:</label>
                 <div class="layui-inline">
-                    <input type="text" class="layui-input" id="brandName"/>
+                    <input type="text" placeholder="请填写货号" class="layui-input" id="productNo" lay-verify="required" />
                 </div>
             </div>
-            <div class="layui-form-item layui-form-text">
-                <label class="layui-form-label">品牌logo：</label>
+            <div id="attrContent">
+                <div class="layui-form-item" th:each="combo : ${comboList}">
+                    <label class="layui-form-label" th:text="${combo.attributeKeyValue} + ':'"></label>
+                    <div class="layui-inline" th:each="values : ${combo.valueList}">
+                        <input class="attrValue" type="radio" th:attr="name='attr' + ${values.attributeId}" th:value="${values.id}" th:text="${values.attributeValue}">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">价格:</label>
                 <div class="layui-inline">
-                    <input type="text" class="layui-input" id="brandLogo"/>
+                    <input type="number" placeholder="请填写价格" class="layui-input" id="price" lay-verify="required" />
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">库存:</label>
+                <div class="layui-inline">
+                    <input type="number" placeholder="请填写库存量" id="stock" class="layui-input" />
                 </div>
             </div>
         </form>
 
         <!-- 表格操作按钮 -->
         <script type="text/html" id="optBar">
-            <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
             <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
         </script>
     </body>
@@ -58,14 +75,17 @@
 
             // 表格数据载入
             console.log("ctx:", ctx);
+            var productId = "[[${productId}]]";
+            var categoryId = "[[${categoryId}]]";
+            console.log("productId:" + productId + " categoryId:" + categoryId);
             table.render({
-                elem: '#brandTable',
-                url: 'listForPage',
+                elem: '#skuTable',
+                url: 'listSku',
                 method: 'post', //方式
                 page: true, //开启分页
                 loading: true, //翻页加loading
                 where: {
-
+                    productId: productId
                 },
                 limit: 10, // 每页显示的条数
                 limits: [10, 20, 50], // 每页条数的选择项
@@ -78,28 +98,38 @@
                             return d.LAY_TABLE_INDEX + 1
                         }
                     }, {
-                        field: 'name',
-                        title: '品牌名称',
+                        field: 'productNo',
+                        title: '货号',
                         width: 120
                     }, {
-                        field: 'logo',
-                        title: '品牌logo',
+                        field: 'productSpecs',
+                        title: '属性',
                         width: 120
+                    }, {
+                        field: 'price',
+                        title: '价格',
+                        width: 80,
+                        edit: 'text'
+                    }, {
+                        field: 'stock',
+                        title: '库存',
+                        width: 80,
+                        edit: 'text'
                     }, {
                         title: '操作',
                         toolbar: '#optBar',
-                        width: 120
+                        width: 80
                     }]
                 ]
             });
 
             var $ = layui.$, active = {
                 reload: function () { // 查询
-                    var name = $('#name').val();
-                    console.log(name);
+                    var proNo = $('#proNo').val();
+                    console.log(proNo);
                     table.reload('tableData', {
                         where: {
-                            "name": name
+                            "productNo": proNo
                         },
                         page: {
                             curr: 1
@@ -108,23 +138,50 @@
                 }, add: function () { // 新增
                     layer.open({
                         type: 1,
-                        area: '400px',
-                        title: '新增品牌',
+                        area: '500px',
+                        title: '新增SKU',
                         btn: ['确定', '取消'],
                         shadeClose: true,
                         shade: 0,
                         maxmin: true,
                         content:$('#addMask'),
-                        yes:function(index, layero){
-                            /*  $.ajaxSettings.async = false; */
+                        success:function(index, layero){
                             $.ajax({
                                 type: "POST",
-                                url: 'add',
-                                data: {
-                                    name: $('#brandName').val(),
-                                    logo: $('#brandLogo').val()
-                                },
+                                url: 'listCombo',
                                 dataType: "JSON",
+                                async: false,
+                                data: {
+                                    categoryId: categoryId,
+                                    productId: productId
+                                },
+                                error:function(){
+                                    layer.alert("本次操作失败，请重新操作！", {icon:5, title:'错误'});
+                                    return false;
+                                }
+                            })
+                        },
+                        yes:function(index, layero){
+                            /*  $.ajaxSettings.async = false; */
+                            var values = [];
+                            $('input:radio:checked').each(function(){
+                                values.push($(this).val());　　// 整个页面所有单元框的值
+                            });
+                            var productSpecs = values.join(",");
+                            console.log("productSpecs:" + productSpecs);
+
+                            $.ajax({
+                                type: "POST",
+                                url: 'addSku',
+                                dataType: "JSON",
+                                data: {
+                                    productNo: $('#productNo').val(),
+                                    productId: productId,
+                                    productSpecs: productSpecs,
+                                    pic: "",
+                                    price: $('#price').val(),
+                                    stock: $('#stock').val()
+                                },
                                 success: function(data){
                                     console.log(data);
                                     if (data.code == 0) {
@@ -163,7 +220,7 @@
             });
 
             //监听行工具事件
-            table.on('tool(brand)', function(obj){
+            table.on('tool(product)', function(obj){
                 var data = obj.data;
                 console.log("ctx:", ctx);
                 if(obj.event === 'del'){
@@ -197,58 +254,19 @@
                         })
                         layer.close(index);
                     });
-                } else if(obj.event === 'edit'){
-                    layer.open({
-                        type: 1,
-                        area: '400px',
-                        title: '编辑品牌',
-                        btn: ['确定', '取消'],
-                        shadeClose: true,
-                        shade: 0,
-                        maxmin: true,
-                        content:$('#addMask'),
-                        success:function(index, layero){
-                            $("#brandName").val(data.name);
-                            $("#brandLogo").val(data.logo);
-                        },
-                        yes:function(index, layero){
-                            /*  $.ajaxSettings.async = false; */
-                            $.ajax({
-                                type: "POST",
-                                url: 'edit',
-                                data: {
-                                    id: data.id,
-                                    name: $('#brandName').val(),
-                                    logo: $('#brandLogo').val()
-                                },
-                                dataType: "JSON",
-                                success: function(data){
-                                    console.log(data);
-                                    if (data.code == 0) {
-                                        layer.close(index);//关闭弹出层
-                                        $("#addMask")[0].reset()//重置form
-                                        table.reload('tableData',{//重载表格
-                                            page:{
-                                                curr:1
-                                            }
-                                        })
-                                        layer.alert('编辑成功', {icon:1, title:'提示'}, function(i){
-                                            layer.close(i);
-                                        })
-                                    } else {
-                                        layer.alert('编辑失败', {icon:2, title:'提示'}, function(i){
-                                            layer.close(i);
-                                        })
-                                    }
-                                },
-                                error:function(){
-                                    layer.alert("本次操作失败，请重新操作！", {icon:5, title:'错误'});
-                                    return false;
-                                }
-                            })
-                        }
-                    });
                 }
+            });
+
+            $("#back").click(function () {
+                window.location.href = document.referrer;
+            })
+
+            //监听单元格编辑
+            table.on('edit(tableData)', function(obj){
+                var value = obj.value //得到修改后的值
+                    ,data = obj.data //得到所在行所有键值
+                    ,field = obj.field; //得到字段
+                layer.msg('[ID: '+ data.id +'] ' + field + ' 字段更改为：'+ value);
             });
 
         });

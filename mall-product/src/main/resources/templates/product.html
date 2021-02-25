@@ -3,11 +3,12 @@
     <head>
         <meta charset="UTF-8" />
         <title>商品管理</title>
-        <link th:href="@{../layui/css/layui.css}" rel="stylesheet" />
-        <link th:href="@{../css/common.css}" rel="stylesheet" />
+        <link th:href="@{~/product/favicon.ico}" rel="shortcut icon">
+        <link th:href="@{~/product/layui/css/layui.css}" rel="stylesheet" />
+        <link th:href="@{~/product/css/common.css}" rel="stylesheet" />
 
-        <script th:src="@{../jquery/jquery-2.1.4.min.js}"></script>
-        <script th:src="@{../layui/layui.js}"></script>
+        <script th:src="@{~/product/jquery/jquery-2.1.4.min.js}"></script>
+        <script th:src="@{~/product/layui/layui.js}"></script>
     </head>
 
     <body>
@@ -17,7 +18,7 @@
                 <div class="layui-inline">
                     <input type="text" autocomplete="off" class="layui-input" id="name" placeholder="请输入商品名称"/>
                 </div>
-                <button class="layui-btn" data-type="reload"><i class="layui-icon">&#xe615;</i>搜索</button>
+                <button class="layui-btn" data-type="reload">搜索</button>
 
                 <button class="layui-btn" data-type="add">新增</button>
             </div>
@@ -26,16 +27,49 @@
 
         <!-- 新增 -->
         <form id="addMask" class="layui-form" lay-filter="addMask" style="display: none; padding: 40px 0;">
-            <div class="layui-form-item layui-form-text">
-                <label class="layui-form-label">商品名：</label>
+            <div class="layui-form-item">
+                <label class="layui-form-label">产品名称:</label>
                 <div class="layui-inline">
-                    <input type="text" class="layui-input" id="productName"/>
+                    <input type="text" placeholder="请填写产品名称" class="layui-input" lay-verify="required" />
                 </div>
             </div>
-            <div class="layui-form-item layui-form-text">
-                <label class="layui-form-label">商品logo：</label>
+            <div class="layui-form-item">
+                <label class="layui-form-label">产品图片:</label>
                 <div class="layui-inline">
-                    <input type="text" class="layui-input" id="productLogo"/>
+                    <input type="text" placeholder="此处为产品图片占位" class="layui-input" />
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">所属品牌:</label>
+                <div class="layui-inline">
+                    <select lay-verify="required">
+                        <option value="1" selected>华为</option>
+                        <option value="2">小米</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">商品分类:</label>
+                <div class="layui-input-inline" style="width: 120px;">
+                    <select id="level1" lay-filter="level1">
+                        <option value="">一级分类</option>
+                    </select>
+                </div>
+                <div class="layui-input-inline" style="width: 120px;">
+                    <select id="level2" lay-filter="level2">
+                        <option value="">二级分类</option>
+                    </select>
+                </div>
+                <div class="layui-input-inline" style="width: 120px;">
+                    <select id="level3">
+                        <option value="">三级分类</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">产品描述:</label>
+                <div class="layui-inline">
+                    <textarea placeholder="描述这款产品" value="" class="layui-textarea"></textarea>
                 </div>
             </div>
         </form>
@@ -44,6 +78,7 @@
         <script type="text/html" id="optBar">
             <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
             <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+            <a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="skuEdit">编辑SKU</a>
         </script>
     </body>
 
@@ -76,13 +111,12 @@
                         templet: function (d) {
                             return d.LAY_TABLE_INDEX + 1
                         }
-                    }, { //a.id, a.`name`, a.pic, b.id brandId, b.`name` brandName, c.id categoryId, c.`name` categoryName, d.product_no productNo, d.`value` attributeValue, d.price, a.description,
-                    // a.delete_status deleteStatus, a.verify_status  verifyStatus, a.publish_status publishStatus
+                    }, {
                         field: 'name',
                         title: '商品名称',
                         width: 150
                     }, {
-                        field: 'pic',
+                        field: 'albumId',
                         title: '商品图片',
                         width: 120
                     }, {
@@ -90,25 +124,17 @@
                         title: '品牌',
                         width: 80
                     }, {
+                        field: 'categoryId',
+                        title: '分类id',
+                        hide: true
+                    }, {
                         field: 'categoryName',
                         title: '分类',
                         width: 80
                     }, {
-                        field: 'productNo',
-                        title: '货号',
-                        width: 80
-                    }, {
-                        field: 'productSpecs',
-                        title: '属性',
-                        width: 120
-                    }, {
                         field: 'description',
                         title: '描述',
                         width: 200
-                    }, {
-                        field: 'price',
-                        title: '价格',
-                        width: 80
                     }, {
                         field: 'deleteStatus',
                         title: '状态',
@@ -116,7 +142,7 @@
                     }, {
                         title: '操作',
                         toolbar: '#optBar',
-                        width: 120
+                        width: 200
                     }]
                 ]
             });
@@ -136,13 +162,16 @@
                 }, add: function () { // 新增
                     layer.open({
                         type: 1,
-                        area: '400px',
+                        area: '550px',
                         title: '新增商品',
                         btn: ['确定', '取消'],
                         shadeClose: true,
                         shade: 0,
                         maxmin: true,
                         content:$('#addMask'),
+                        success: function(layero, index){
+                            listByLevel();
+                        },
                         yes:function(index, layero){
                             /*  $.ajaxSettings.async = false; */
                             $.ajax({
@@ -228,7 +257,7 @@
                 } else if(obj.event === 'edit'){
                     layer.open({
                         type: 1,
-                        area: '400px',
+                        area: '550px',
                         title: '编辑商品',
                         btn: ['确定', '取消'],
                         shadeClose: true,
@@ -276,9 +305,123 @@
                             })
                         }
                     });
+                } else if(obj.event === 'skuEdit'){
+                    console.log("SKU编辑");
+                    location.href = "sku?categoryId=" + data.categoryId + "&productId=" + data.id;
                 }
             });
 
+            form.on('select(level1)', function(data){
+                $("#level2").empty();
+                $("#level2").append(new Option("二级分类", ""));
+                $("#level3").empty();
+                $("#level3").append(new Option("三级分类", ""));
+                //data.value 得到被选中的值
+                var parId = data.value;
+                $.ajax({
+                    type: "POST",
+                    url: ctx + 'category/listByLevel',
+                    dataType: "JSON",
+                    data: {
+                        level: 2,
+                        parId: parId
+                    },
+                    success: function(data){
+                        console.log(data);
+                        if (data.code == 0) {
+                            $.each(data.data, function(index, item){
+                                $("#level2").append(new Option(item.name, item.id));
+                            });
+                            layui.form.render("select");
+                        } else {
+                            layer.alert('二级分类列表加载失败', {icon:2, title:'提示'}, function(i){
+                                layer.close(i);
+                            })
+                        }
+                    },
+                    error:function(){
+                        layer.alert("本次操作失败，请重新操作！", {icon:5, title:'错误'});
+                        return false;
+                    }
+                })
+
+            });
+
+            form.on('select(level2)', function(data){
+                $("#level3").empty();
+                $("#level3").append(new Option("三级分类", ""));
+                //data.value 得到被选中的值
+                var parId = data.value;
+                $.ajax({
+                    type: "POST",
+                    url: ctx + 'category/listByLevel',
+                    dataType: "JSON",
+                    data: {
+                        level: 3,
+                        parId: parId
+                    },
+                    success: function(data){
+                        console.log(data);
+                        if (data.code == 0) {
+                            $.each(data.data, function(index, item){
+                                $("#level3").append(new Option(item.name, item.id));
+                            });
+                            layui.form.render("select");
+                        } else {
+                            layer.alert('三级分类列表加载失败', {icon:2, title:'提示'}, function(i){
+                                layer.close(i);
+                            })
+                        }
+                    },
+                    error:function(){
+                        layer.alert("本次操作失败，请重新操作！", {icon:5, title:'错误'});
+                        return false;
+                    }
+                })
+
+            });
+
+            //监听单元格编辑
+            table.on('edit(skuTable)', function(obj){
+                var value = obj.value //得到修改后的值
+                    ,data = obj.data //得到所在行所有键值
+                    ,field = obj.field; //得到字段
+                layer.msg('[ID: '+ data.id +'] ' + field + ' 字段更改为：'+ value);
+            });
+
         });
+
+        // 加载级联分类下拉列表
+        function listByLevel() {
+            $.ajax({
+                type: "POST",
+                url: ctx + 'category/listByLevel',
+                dataType: "JSON",
+                async: false,
+                data: {
+                    level: 1,
+                    parId: 0
+                },
+                success: function(data){
+                    console.log(data);
+                    if (data.code == 0) {
+                        $("#level1").empty();
+                        $("#level1").append(new Option("一级分类", ""));
+                        $.each(data.data, function(index, item){
+                            $("#level1").append(new Option(item.name, item.id));
+                        });
+                        layui.form.render("select");
+                    } else {
+                        layer.alert('一级分类列表加载失败', {icon:2, title:'提示'}, function(i){
+                            layer.close(i);
+                        })
+                    }
+                },
+                error:function(){
+                    layer.alert("本次操作失败，请重新操作！", {icon:5, title:'错误'});
+                    return false;
+                }
+            })
+        }
     </script>
 </html>

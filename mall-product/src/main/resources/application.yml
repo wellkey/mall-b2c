@@ -15,6 +15,7 @@ spring:
       max-wait: 10000
   thymeleaf:
     cache: false
+    mode: LEGACYHTML5
 
 #pagehelper
 pagehelper:

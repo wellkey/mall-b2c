@@ -8,9 +8,19 @@ package com.pzh.mall.module.domain;
  */
 public class AttributeValue {
 
+    private Long id;
+
     private Long attributeId;
 
     private String attributeValue;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public Long getAttributeId() {
         return attributeId;

@@ -2,14 +2,14 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.pzh.mall.module.dao.BrandDao">
     <select id="list" resultType="com.pzh.mall.module.domain.Brand">
-        SELECT t.id, t.`name`, t.logo, t.sort FROM pms_brand t
+        SELECT t.id, t.`name`, t.logo FROM pms_brand t
         <if test="name != null">
             WHERE t.`name` LIKE "%"#{name}"%"
         </if>
     </select>
 
     <select id="read" resultType="com.pzh.mall.module.domain.Brand">
-        SELECT t.id, t.`name`, t.logo, t.sort FROM pms_brand t WHERE t.id = #{id}
+        SELECT t.id, t.`name`, t.logo FROM pms_brand t WHERE t.id = #{id}
     </select>
 
     <insert id="add" parameterType="com.pzh.mall.module.domain.Brand" useGeneratedKeys="true" keyProperty="id">

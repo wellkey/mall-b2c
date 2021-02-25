@@ -17,8 +17,6 @@ public class Brand implements Serializable {
 
     private String logo;
 
-    private Integer sort;
-
     public Long getId() {
         return id;
     }
@@ -43,21 +41,4 @@ public class Brand implements Serializable {
         this.logo = logo;
     }
 
-    public Integer getSort() {
-        return sort;
-    }
-
-    public void setSort(Integer sort) {
-        this.sort = sort;
-    }
-
-    @Override
-    public String toString() {
-        return "Brand{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", logo='" + logo + '\'' +
-                ", sort=" + sort +
-                '}';
-    }
 }

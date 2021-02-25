@@ -4,7 +4,7 @@
     <resultMap id="BaseResultMap" type="com.pzh.mall.module.domain.Product">
         <id column="id" jdbcType="INTEGER" property="id" />
         <result column="name" jdbcType="VARCHAR" property="name" />
-        <result column="pic" jdbcType="VARCHAR" property="pic" />
+        <result column="albumId" jdbcType="INTEGER" property="albumId" />
         <result column="brandName" jdbcType="VARCHAR" property="brandName" />
         <result column="logo" jdbcType="VARCHAR" property="logo" />
         <result column="categoryId" jdbcType="INTEGER" property="categoryId" />
@@ -19,9 +19,29 @@
     </resultMap>
 
     <select id="listForPage" resultMap="BaseResultMap">
-        select a.id, a.`name`, a.pic, b.id brandId, b.`name` brandName, c.id categoryId, c.`name` categoryName, a.description, a.delete_status deleteStatus, a.verify_status  verifyStatus, a.publish_status publishStatus, d.product_no productNo, d.product_specs productSpecs, d.price
-        from pms_product a LEFT JOIN pms_brand b on a.brand_id = b.id LEFT JOIN pms_category c on a.category_id = c.id LEFT JOIN pms_product_item d on a.id = d.product_id
+        select a.id, a.`name`, a.album_id albumId, b.id brandId, b.`name` brandName, c.id categoryId, c.`name` categoryName, a.description, a.delete_status deleteStatus, a.verify_status  verifyStatus, a.publish_status publishStatus
+        from pms_product a LEFT JOIN pms_brand b on a.brand_id = b.id LEFT JOIN pms_category c on a.category_id = c.id
         where a.delete_status = 0
     </select>
+
+    <select id="listAttrKey" resultType="com.pzh.mall.module.domain.Attribute">
+        SELECT t.id, t.category_id categoryId, t.`name` from pms_attribute_key t where t.category_id = #{categoryId}
+    </select>
+
+    <select id="listAttrValuesByKey" resultType="com.pzh.mall.module.domain.AttributeValue">
+        SELECT t.id, t.attribute_id attributeId, t.attribute_value attributeValue from pms_attribute_value t where t.product_id = #{productId} AND t.attribute_id = #{attributeId}
+    </select>
+
+    <select id="listSku" resultType="com.pzh.mall.module.domain.ProductItem">
+        SELECT t.product_no productNo, t.product_specs productSpecs, t.price, t.stock FROM pms_product_item t WHERE t.product_id = #{productId}
+    </select>
+
+    <select id="readValueName" resultType="string">
+        SELECT t.attribute_value from pms_attribute_value t WHERE t.id = #{id}
+    </select>
+
+    <insert id="addSku" parameterType="com.pzh.mall.module.domain.ProductItem">
+        INSERT INTO pms_product_item(product_no, product_id, product_specs, pic, price, stock) VALUES (#{productNo}, #{productId}, #{productSpecs}, #{pic}, #{price}, #{stock})
+    </insert>
 
 </mapper>

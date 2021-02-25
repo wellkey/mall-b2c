@@ -20,8 +20,8 @@ public class CategoryServiceImpl implements CategoryService {
     private CategoryDao categoryDao;
 
     @Override
-    public List<Category> list(int level, long parId) {
-        return categoryDao.list(level, parId);
+    public List<Category> list(int level, long parId, String name) {
+        return categoryDao.list(level, parId, name);
     }
 
     @Override

@@ -3,6 +3,9 @@
 <mapper namespace="com.pzh.mall.module.dao.CategoryDao">
     <select id="list" resultType="com.pzh.mall.module.domain.Category">
         SELECT t.id, t.`name`, t.par_id parId, t.`level`, t.unit FROM pms_category t WHERE t.`level` = #{level} AND t.par_id = #{parId}
+        <if test="name != ''">
+            WHERE t.`name` LIKE CONCAT('%',#{name},'%')
+        </if>
     </select>
 
     <select id="read" resultType="com.pzh.mall.module.domain.Category">

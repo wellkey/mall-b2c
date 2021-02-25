@@ -37,12 +37,12 @@ public class CategoryController {
 
     @RequestMapping("/listForPage")
     @ResponseBody
-    public ResultMsg listForPage(@RequestParam int page, @RequestParam int limit) {
-        LOGGER.info("分页列表 page:" + page + " limit:" + limit);
+    public ResultMsg listForPage(@RequestParam(defaultValue = "1") int level, @RequestParam(defaultValue = "0") long parId, @RequestParam(defaultValue = "") String name, @RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "10") int limit) {
+        LOGGER.info("分页列表 level:" + level + " parId:" + parId + " name:" + name + " page:" + page + " limit:" + limit);
         ResultMsg resultMsg = new ResultMsg();
         try {
             PageHelper.startPage(page, limit);
-            List<Category> list = categoryService.list(1, 0);
+            List<Category> list = categoryService.list(level, parId, name);
             PageInfo<Category> pageInfo = new PageInfo<>(list);
             resultMsg.setData(pageInfo.getList());
             resultMsg.setCount(pageInfo.getTotal());
@@ -126,7 +126,7 @@ public class CategoryController {
         LOGGER.info("根据层级列出所有分类 level:" + level + " parId:" + parId);
         ResultMsg resultMsg = new ResultMsg();
         try {
-            List<Category> list = categoryService.list(level, parId);
+            List<Category> list = categoryService.list(level, parId, "");
             resultMsg.setData(list);
             resultMsg.setCount((long) list.size());
         } catch (Exception e) {

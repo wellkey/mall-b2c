@@ -15,7 +15,7 @@ import java.util.List;
 @Mapper
 public interface CategoryDao {
 
-    List<Category> list(@Param("level")int level, @Param("parId")long parId);
+    List<Category> list(@Param("level")int level, @Param("parId")long parId, @Param("name")String name);
 
     Category read(long id);
 

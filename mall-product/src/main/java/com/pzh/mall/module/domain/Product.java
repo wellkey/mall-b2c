@@ -15,7 +15,7 @@ public class Product implements Serializable {
 
     private String name;
 
-    private String pic;
+    private Long albumId;
 
     private Long brandId;
 
@@ -33,12 +33,6 @@ public class Product implements Serializable {
 
     private Integer publishStatus;
 
-    private String productNo;
-
-    private String  productSpecs;
-
-    private Double price;
-
     public Long getId() {
         return id;
     }
@@ -55,12 +49,12 @@ public class Product implements Serializable {
         this.name = name;
     }
 
-    public String getPic() {
-        return pic;
+    public Long getAlbumId() {
+        return albumId;
     }
 
-    public void setPic(String pic) {
-        this.pic = pic;
+    public void setAlbumId(Long albumId) {
+        this.albumId = albumId;
     }
 
     public Long getBrandId() {
@@ -127,27 +121,4 @@ public class Product implements Serializable {
         this.publishStatus = publishStatus;
     }
 
-    public String getProductNo() {
-        return productNo;
-    }
-
-    public void setProductNo(String productNo) {
-        this.productNo = productNo;
-    }
-
-    public String getProductSpecs() {
-        return productSpecs;
-    }
-
-    public void setProductSpecs(String productSpecs) {
-        this.productSpecs = productSpecs;
-    }
-
-    public Double getPrice() {
-        return price;
-    }
-
-    public void setPrice(Double price) {
-        this.price = price;
-    }
 }
