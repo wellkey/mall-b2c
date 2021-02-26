@@ -14,7 +14,17 @@ import java.util.List;
  */
 public interface ProductService {
 
+    /**
+     * 列出所有商品
+     * @return
+     */
     List<Product> listForPage();
+
+    /**
+     * 新增商品
+     * @param product
+     */
+    void add(Product product);
 
     /**
      * 根据分类id和产品id列出属性组合
@@ -31,5 +41,9 @@ public interface ProductService {
      */
     List<ProductItem> listSku(long productId);
 
+    /**
+     * 新增商品SKU
+     * @param productItem
+     */
     void addSku(ProductItem productItem);
 }

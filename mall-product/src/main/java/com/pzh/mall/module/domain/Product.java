@@ -15,7 +15,7 @@ public class Product implements Serializable {
 
     private String name;
 
-    private Long albumId;
+    private String pic;
 
     private Long brandId;
 
@@ -49,12 +49,12 @@ public class Product implements Serializable {
         this.name = name;
     }
 
-    public Long getAlbumId() {
-        return albumId;
+    public String getPic() {
+        return pic;
     }
 
-    public void setAlbumId(Long albumId) {
-        this.albumId = albumId;
+    public void setPic(String pic) {
+        this.pic = pic;
     }
 
     public Long getBrandId() {
@@ -121,4 +121,20 @@ public class Product implements Serializable {
         this.publishStatus = publishStatus;
     }
 
+    @Override
+    public String toString() {
+        return "Product{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", pic='" + pic + '\'' +
+                ", brandId=" + brandId +
+                ", brandName='" + brandName + '\'' +
+                ", categoryId=" + categoryId +
+                ", categoryName='" + categoryName + '\'' +
+                ", description='" + description + '\'' +
+                ", deleteStatus=" + deleteStatus +
+                ", verifyStatus=" + verifyStatus +
+                ", publishStatus=" + publishStatus +
+                '}';
+    }
 }

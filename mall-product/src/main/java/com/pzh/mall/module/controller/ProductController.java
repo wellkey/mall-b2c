@@ -3,19 +3,30 @@ package com.pzh.mall.module.controller;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.pzh.mall.common.ResultMsg;
-import com.pzh.mall.module.domain.*;
+import com.pzh.mall.module.domain.AttributeCombo;
+import com.pzh.mall.module.domain.Product;
+import com.pzh.mall.module.domain.ProductItem;
 import com.pzh.mall.module.service.ProductService;
+import com.pzh.mall.util.FileUtil;
+import com.pzh.mall.util.PropertiesUtil;
 import io.swagger.annotations.Api;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Description TODO
@@ -36,11 +47,12 @@ public class ProductController {
     public String index(Model model) {
         LOGGER.info("进入商品管理首页");
 
+        model.addAttribute("callUrl", "");
         return "product";
     }
 
     @RequestMapping("/sku")
-    public String productAdd(Model model, long categoryId, long productId) {
+    public String sku(Model model, long categoryId, long productId) {
         LOGGER.info("进入商品sku页 categoryId:" + categoryId + " productId:" + productId);
         List<AttributeCombo> comboList = productService.listCombo(categoryId, productId);
         model.addAttribute("comboList", comboList);
@@ -61,6 +73,22 @@ public class ProductController {
             PageInfo<Product> pageInfo = new PageInfo<>(list);
             resultMsg.setData(pageInfo.getList());
             resultMsg.setCount(pageInfo.getTotal());
+        } catch (Exception e) {
+            e.printStackTrace();
+            resultMsg.setCode(-1);
+            resultMsg.setMsg("请求失败");
+        }
+
+        return resultMsg;
+    }
+
+    @RequestMapping("/add")
+    @ResponseBody
+    public ResultMsg add(Product product) {
+        LOGGER.info("新增商品 product:" + product);
+        ResultMsg resultMsg = new ResultMsg();
+        try {
+            productService.add(product);
         } catch (Exception e) {
             e.printStackTrace();
             resultMsg.setCode(-1);
@@ -122,5 +150,43 @@ public class ProductController {
         }
 
         return resultMsg;
+    }
+
+
+    @RequestMapping("/uploadImg")
+    @ResponseBody
+    public Map<String, Object> uploadImg(HttpServletRequest request) {
+        LOGGER.info("上传图片");
+        HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.set("Content-Type", "text/plain;charset=utf-8");
+        MultipartHttpServletRequest multiRequest = (MultipartHttpServletRequest) request;
+        CommonsMultipartFile file = (CommonsMultipartFile) multiRequest.getFile("file");
+
+        Map<String, Object> map = new HashMap<>();
+        String baseUrl = PropertiesUtil.getPro("product.base_url");
+//        String fileUrl = PropertiesUtil.getPro("product.image_url") + "/img";
+        String fileUrl = "/img";
+        // 上传
+        try {
+            ResultMsg resultMsg = FileUtil.uploadFile(file, baseUrl, fileUrl);
+            if (resultMsg.getCode() != 0) {
+                map.put("code", 1);
+                map.put("msg", "图片上传失败");
+                map.put("data", "");
+                return map;
+            }
+
+            String path = resultMsg.getMsg();
+            LOGGER.info("图片存放地址:" + path);
+            map.put("code", 0);
+            map.put("msg", "图片上传成功");
+            map.put("data", path);
+            return map;
+        } catch (IOException e) {
+            e.printStackTrace();
+            map.put("code", -1);
+            map.put("msg", "图片上传失败");
+            return map;
+        }
     }
 }

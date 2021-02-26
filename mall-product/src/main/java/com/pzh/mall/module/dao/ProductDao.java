@@ -20,6 +20,8 @@ public interface ProductDao {
 
     List<Product> listForPage();
 
+    void add(Product product);
+
     List<Attribute> listAttrKey(@Param("categoryId") long categoryId);
 
     List<AttributeValue> listAttrValuesByKey(@Param("productId") long productId, @Param("attributeId") long attributeId);

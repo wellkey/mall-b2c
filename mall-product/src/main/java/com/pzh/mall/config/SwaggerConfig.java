@@ -12,7 +12,7 @@ import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 /**
- * @Description TODO
+ * @Description TODO 自动API工具配置
  * @Author panzhh
  * @Date 2020/6/4 16:24
  * @Version 1.0

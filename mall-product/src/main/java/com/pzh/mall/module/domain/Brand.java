@@ -41,4 +41,12 @@ public class Brand implements Serializable {
         this.logo = logo;
     }
 
+    @Override
+    public String toString() {
+        return "Brand{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", logo='" + logo + '\'' +
+                '}';
+    }
 }

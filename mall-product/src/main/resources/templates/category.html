@@ -180,11 +180,8 @@
                                     if (data.code == 0) {
                                         layer.close(index);//关闭弹出层
                                         $("#addMask")[0].reset()//重置form
-                                        table.reload('tableData',{//重载表格
-                                            page:{
-                                                curr:1
-                                            }
-                                        })
+                                        table.reload('tableData')
+
                                         layer.alert('新增成功', {icon:1, title:'提示'}, function(i){
                                             layer.close(i);
                                         })
@@ -231,9 +228,6 @@
                                     table.reload('tableData', {
                                         where: {
                                             "name": $('#name').val()
-                                        },
-                                        page: {
-                                            curr: 1
                                         }
                                     });
                                 } else {
@@ -279,11 +273,8 @@
                                     if (data.code == 0) {
                                         layer.close(index);//关闭弹出层
                                         $("#addMask")[0].reset()//重置form
-                                        table.reload('tableData',{//重载表格
-                                            page:{
-                                                curr:1
-                                            }
-                                        })
+                                        table.reload('tableData')
+
                                         layer.alert('编辑成功', {icon:1, title:'提示'}, function(i){
                                             layer.close(i);
                                         })
@@ -325,9 +316,6 @@
                         where: {
                             "level": curLevel,
                             "parId": curParId
-                        },
-                        page: {
-                            curr: 1
                         }
                     });
                 }
@@ -445,9 +433,6 @@
                     where: {
                         "level": lastLevel,
                         "parId": lastParId
-                    },
-                    page: {
-                        curr: 1
                     }
                 });
             })

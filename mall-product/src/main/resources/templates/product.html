@@ -9,6 +9,15 @@
 
         <script th:src="@{~/product/jquery/jquery-2.1.4.min.js}"></script>
         <script th:src="@{~/product/layui/layui.js}"></script>
+
+        <style type="text/css">
+            .taskImg {
+                width: 28px;
+                height: 28px;
+                margin-right: 12px;
+                display: inline-block;
+            }
+        </style>
     </head>
 
     <body>
@@ -29,20 +38,23 @@
         <form id="addMask" class="layui-form" lay-filter="addMask" style="display: none; padding: 40px 0;">
             <div class="layui-form-item">
                 <label class="layui-form-label">产品名称:</label>
-                <div class="layui-inline">
-                    <input type="text" placeholder="请填写产品名称" class="layui-input" lay-verify="required" />
+                <div class="layui-inline" style="width: 380px;">
+                    <input id="productName" type="text" placeholder="请填写产品名称" class="layui-input" lay-verify="required" />
                 </div>
             </div>
             <div class="layui-form-item">
                 <label class="layui-form-label">产品图片:</label>
-                <div class="layui-inline">
-                    <input type="text" placeholder="此处为产品图片占位" class="layui-input" />
+                <div class="layui-input-inline uploadBox" style="padding: 9px 0;">
+                    <div class="taskImg">
+                        <img src="" alt="" class="showImg">
+                    </div>
+                    <a id="uploadImg" href="javascript:void(0);" style="color: #1890FF;font-size: 14px;">上传图片</a>
                 </div>
             </div>
             <div class="layui-form-item">
                 <label class="layui-form-label">所属品牌:</label>
-                <div class="layui-inline">
-                    <select lay-verify="required">
+                <div class="layui-inline" style="width: 380px;">
+                    <select id="brandId" lay-verify="required">
                         <option value="1" selected>华为</option>
                         <option value="2">小米</option>
                     </select>
@@ -52,24 +64,24 @@
                 <label class="layui-form-label">商品分类:</label>
                 <div class="layui-input-inline" style="width: 120px;">
                     <select id="level1" lay-filter="level1">
-                        <option value="">一级分类</option>
+                        <option value="0">一级分类</option>
                     </select>
                 </div>
                 <div class="layui-input-inline" style="width: 120px;">
                     <select id="level2" lay-filter="level2">
-                        <option value="">二级分类</option>
+                        <option value="0">二级分类</option>
                     </select>
                 </div>
                 <div class="layui-input-inline" style="width: 120px;">
                     <select id="level3">
-                        <option value="">三级分类</option>
+                        <option value="0">三级分类</option>
                     </select>
                 </div>
             </div>
             <div class="layui-form-item">
                 <label class="layui-form-label">产品描述:</label>
-                <div class="layui-inline">
-                    <textarea placeholder="描述这款产品" value="" class="layui-textarea"></textarea>
+                <div class="layui-inline" style="width: 380px;">
+                    <textarea id="description" placeholder="描述这款产品" class="layui-textarea"></textarea>
                 </div>
             </div>
         </form>
@@ -84,10 +96,11 @@
 
     <script th:inline="javascript">
         var ctx = [[@{/}]];
-        layui.use(['form', 'table'], function() {
+        layui.use(['form', 'table', 'upload'], function() {
             var $ = layui.jquery,
                 form = layui.form,
                 table = layui.table,
+                upload = layui.upload
                 laypage = layui.laypage;
 
             // 表格数据载入
@@ -116,7 +129,7 @@
                         title: '商品名称',
                         width: 150
                     }, {
-                        field: 'albumId',
+                        field: 'pic',
                         title: '商品图片',
                         width: 120
                     }, {
@@ -147,6 +160,7 @@
                 ]
             });
 
+            var imgPath;
             var $ = layui.$, active = {
                 reload: function () { // 查询
                     var name = $('#name').val();
@@ -171,15 +185,56 @@
                         content:$('#addMask'),
                         success: function(layero, index){
                             listByLevel();
+
+                            // 清空
+                            $('#uploadImg').remove()
+                            $('.uploadBox').append('<a href="javascript:void(0);" id="uploadImg" style="color: #1890FF;font-size: 14px;">上传图片</a>')
+                            // 选择图片
+                            upload.render({
+                                elem: '#uploadImg',
+                                url: "uploadImg",
+                                accept: 'images',
+                                auto: true ,//选择文件后自动上传
+                                multiple: false,
+                                before: function(obj){ //obj参数包含的信息，跟 choose回调完全一致，可参见上文。
+
+                                },
+                                done: function(res){
+                                    //上传完毕回调
+                                    if(res.code == 0){
+                                        //do something （比如将res返回的图片链接保存到表单的隐藏域）
+                                        imgPath = res.data;
+                                        $('.taskImg img').attr('src', "${callUrl}" + imgPath);
+                                    }
+                                },
+                                error: function(){
+                                    //请求异常回调
+                                    layer.msg("出错啦，请稍后再试", {icon: 5});
+                                }
+                            });
                         },
                         yes:function(index, layero){
                             /*  $.ajaxSettings.async = false; */
+                            var categoryId = 0;
+                            var level3 = $('#level3').val();
+                            var level2 = $('#level2').val();
+                            var level1 = $('#level1').val();
+                            if (level3 != 0) {
+                                categoryId =  level3;
+                            } else if (level2 != 0) {
+                                categoryId =  level2;
+                            } else {
+                                categoryId =  level1;
+                            }
                             $.ajax({
                                 type: "POST",
                                 url: 'add',
                                 data: {
                                     name: $('#productName').val(),
-                                    logo: $('#productLogo').val()
+                                    pic: imgPath,
+                                    brandId: $('#brandId').val(),
+                                    categoryId: categoryId,
+                                    description: $('#description').val()
                                 },
                                 dataType: "JSON",
                                 success: function(data){
@@ -318,6 +373,9 @@
                 $("#level3").append(new Option("三级分类", ""));
                 //data.value 得到被选中的值
                 var parId = data.value;
+                if (parId == "") {
+                    return false;
+                }
                 $.ajax({
                     type: "POST",
                     url: ctx + 'category/listByLevel',
@@ -352,6 +410,9 @@
                 $("#level3").append(new Option("三级分类", ""));
                 //data.value 得到被选中的值
                 var parId = data.value;
+                if (parId == "") {
+                    return false;
+                }
                 $.ajax({
                     type: "POST",
                     url: ctx + 'category/listByLevel',

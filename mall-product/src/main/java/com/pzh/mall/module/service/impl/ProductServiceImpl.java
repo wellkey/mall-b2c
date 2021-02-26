@@ -29,6 +29,11 @@ public class ProductServiceImpl implements ProductService {
         return productDao.listForPage();
     }
 
+    @Override
+    public void add(Product product) {
+        productDao.add(product);
+    }
+
 
     @Override
     public List<AttributeCombo> listCombo(long categoryId, long productId) {

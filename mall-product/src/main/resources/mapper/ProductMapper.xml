@@ -4,7 +4,7 @@
     <resultMap id="BaseResultMap" type="com.pzh.mall.module.domain.Product">
         <id column="id" jdbcType="INTEGER" property="id" />
         <result column="name" jdbcType="VARCHAR" property="name" />
-        <result column="albumId" jdbcType="INTEGER" property="albumId" />
+        <result column="pic" jdbcType="VARCHAR" property="pic" />
         <result column="brandName" jdbcType="VARCHAR" property="brandName" />
         <result column="logo" jdbcType="VARCHAR" property="logo" />
         <result column="categoryId" jdbcType="INTEGER" property="categoryId" />
@@ -19,10 +19,14 @@
     </resultMap>
 
     <select id="listForPage" resultMap="BaseResultMap">
-        select a.id, a.`name`, a.album_id albumId, b.id brandId, b.`name` brandName, c.id categoryId, c.`name` categoryName, a.description, a.delete_status deleteStatus, a.verify_status  verifyStatus, a.publish_status publishStatus
+        select a.id, a.`name`, a.pic, b.id brandId, b.`name` brandName, c.id categoryId, c.`name` categoryName, a.description, a.delete_status deleteStatus, a.verify_status  verifyStatus, a.publish_status publishStatus
         from pms_product a LEFT JOIN pms_brand b on a.brand_id = b.id LEFT JOIN pms_category c on a.category_id = c.id
         where a.delete_status = 0
     </select>
+
+    <insert id="add" parameterType="com.pzh.mall.module.domain.Product">
+        insert into pms_product (name, pic, brand_id, category_id, description) VALUES (#{name}, #{pic}, #{brandId}, #{categoryId}, #{description})
+    </insert>
 
     <select id="listAttrKey" resultType="com.pzh.mall.module.domain.Attribute">
         SELECT t.id, t.category_id categoryId, t.`name` from pms_attribute_key t where t.category_id = #{categoryId}

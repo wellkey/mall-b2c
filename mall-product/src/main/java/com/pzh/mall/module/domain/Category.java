@@ -60,4 +60,15 @@ public class Category implements Serializable {
     public void setUnit(String unit) {
         this.unit = unit;
     }
+
+    @Override
+    public String toString() {
+        return "Category{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", parId=" + parId +
+                ", level=" + level +
+                ", unit='" + unit + '\'' +
+                '}';
+    }
 }
