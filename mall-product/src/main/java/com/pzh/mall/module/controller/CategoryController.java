@@ -37,12 +37,12 @@ public class CategoryController {
 
     @RequestMapping("/listForPage")
     @ResponseBody
-    public ResultMsg listForPage(@RequestParam(defaultValue = "1") int level, @RequestParam(defaultValue = "0") long parId, @RequestParam(defaultValue = "") String name, @RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "10") int limit) {
-        LOGGER.info("分页列表 level:" + level + " parId:" + parId + " name:" + name + " page:" + page + " limit:" + limit);
+    public ResultMsg listForPage(@RequestParam(defaultValue = "1") int level, @RequestParam(defaultValue = "0") long parId, @RequestParam(defaultValue = "") String categoryName, @RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "10") int limit) {
+        LOGGER.info("分页列表 level:" + level + " parId:" + parId + " categoryName:" + categoryName + " page:" + page + " limit:" + limit);
         ResultMsg resultMsg = new ResultMsg();
         try {
             PageHelper.startPage(page, limit);
-            List<Category> list = categoryService.list(level, parId, name);
+            List<Category> list = categoryService.list(level, parId, categoryName);
             PageInfo<Category> pageInfo = new PageInfo<>(list);
             resultMsg.setData(pageInfo.getList());
             resultMsg.setCount(pageInfo.getTotal());
@@ -74,11 +74,11 @@ public class CategoryController {
 
     @RequestMapping("/add")
     @ResponseBody
-    public ResultMsg add(Category category) {
-        LOGGER.info("Category:" + category);
+    public ResultMsg add(String name, @RequestParam(defaultValue = "0") long parId, @RequestParam(defaultValue = "1") int level, String unit) {
+        LOGGER.info("新增商品分类 name:" + name + " parId:" + parId + " level:" + level + " unit:" + unit);
         ResultMsg resultMsg = new ResultMsg();
         try {
-            categoryService.add(category);
+            categoryService.add(name, parId, level, unit);
         } catch (Exception e) {
             e.printStackTrace();
             resultMsg.setCode(-1);
@@ -90,11 +90,11 @@ public class CategoryController {
 
     @RequestMapping("/edit")
     @ResponseBody
-    public ResultMsg edit(Category category) {
-        LOGGER.info("Category:" + category);
+    public ResultMsg edit(long id, String name, @RequestParam(defaultValue = "0") long parId, @RequestParam(defaultValue = "1") int level, String unit) {
+        LOGGER.info("编辑商品分类 id:" + id + " name:" + name + " parId:" + parId + " level:" + level + " unit:" + unit);
         ResultMsg resultMsg = new ResultMsg();
         try {
-            categoryService.edit(category);
+            categoryService.edit(id, name, parId, level, unit);
         } catch (Exception e) {
             e.printStackTrace();
             resultMsg.setCode(-1);

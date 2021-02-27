@@ -19,9 +19,9 @@ public interface CategoryDao {
 
     Category read(long id);
 
-    void add(Category category);
+    void add(String name, long parId, int level, String unit);
 
-    void edit(Category category);
+    void edit(long id, String name, long parId, int level, String unit);
 
     void remove(long id);
 }

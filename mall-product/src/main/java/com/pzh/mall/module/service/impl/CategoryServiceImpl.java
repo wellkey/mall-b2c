@@ -30,13 +30,13 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public void add(Category category) {
-        categoryDao.add(category);
+    public void add(String name, long parId, int level, String unit) {
+        categoryDao.add(name, parId, level, unit);
     }
 
     @Override
-    public void edit(Category category) {
-        categoryDao.edit(category);
+    public void edit(long id, String name, long parId, int level, String unit) {
+        categoryDao.edit(id, name, parId, level, unit);
     }
 
     @Override

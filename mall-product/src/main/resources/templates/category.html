@@ -18,7 +18,7 @@
             <div class="myTable">
                 分类名：
                 <div class="layui-inline">
-                    <input type="text" autocomplete="off" class="layui-input" id="name" placeholder="请输入分类名称"/>
+                    <input type="text" autocomplete="off" class="layui-input" id="categoryName" placeholder="请输入分类名称"/>
                 </div>
                 <button class="layui-btn" data-type="reload">搜索</button>
 
@@ -33,41 +33,13 @@
             <div class="layui-form-item layui-form-text">
                 <label class="layui-form-label">分类名：</label>
                 <div class="layui-inline">
-                    <input type="text" class="layui-input" id="categoryName"/>
-                </div>
-            </div>
-            <div class="layui-form-item">
-                <label class="layui-form-label">分类层级：</label>
-                <div class="layui-input-inline">
-                    <select id="level" lay-filter="level">
-                        <option value="1">1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                    </select>
-                </div>
-            </div>
-            <div id="categoryBox" class="layui-form-item">
-                <label class="layui-form-label">商品分类：</label>
-                <div id="parBox1" class="layui-input-inline" style="width: 120px;">
-                    <select id="par1" lay-filter="par1">
-                        <option value="">一级分类</option>
-                    </select>
-                </div>
-                <div id="parBox2" class="layui-input-inline" style="width: 120px; display: none;">
-                    <select id="par2" lay-filter="par2">
-                        <option value="">二级分类</option>
-                    </select>
-                </div>
-                <div id="parBox3" class="layui-input-inline" style="width: 120px; display: none;">
-                    <select id="par3">
-                        <option value="">三级分类</option>
-                    </select>
+                    <input type="text" class="layui-input" id="name"/>
                 </div>
             </div>
             <div class="layui-form-item layui-form-text">
                 <label class="layui-form-label">单位：</label>
                 <div class="layui-inline">
-                    <input type="text" class="layui-input" id="categoryUnit"/>
+                    <input type="text" class="layui-input" id="unit"/>
                 </div>
             </div>
         </form>
@@ -76,18 +48,18 @@
         <script type="text/html" id="optBar">
             <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
             <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
-            <a class="layui-btn layui-btn-warm layui-btn-xs aa" lay-event="readSubLevel">查看下级分类</a>
+            <a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="readSubLevel">查看下级分类</a>
         </script>
     </body>
 
     <script th:inline="javascript">
         var ctx = [[@{/}]];
-        var levelArr = [], parIdArr = [];
         var curLevel = 1;
-        levelArr.push(curLevel);
         var curParId = 0;
-        parIdArr.push(curParId)
-        console.log("curLevel:", curLevel, " curParId:", curParId);
+
+        var parIdArr = [];
+        parIdArr.push(0);
+
         layui.use(['form', 'table'], function() {
             var $ = layui.jquery,
                 form = layui.form,
@@ -141,11 +113,11 @@
 
             var $ = layui.$, active = {
                 reload: function () { // 查询
-                    var name = $('#name').val();
-                    console.log(name);
+                    var categoryName = $('#categoryName').val();
+                    console.log(categoryName);
                     table.reload('tableData', {
                         where: {
-                            "name": name
+                            "categoryName": categoryName
                         },
                         page: {
                             curr: 1
@@ -170,9 +142,10 @@
                                 type: "POST",
                                 url: 'add',
                                 data: {
-                                    name: $('#categoryName').val(),
-                                    level: $('#categoryAttribute').val(),
-                                    unit: $('#categoryUnit').val()
+                                    name: $('#name').val(),
+                                    parId: curParId,
+                                    level: curLevel,
+                                    unit: $('#unit').val()
                                 },
                                 dataType: "JSON",
                                 success: function(data){
@@ -252,9 +225,8 @@
                         maxmin: true,
                         content:$('#addMask'),
                         success:function(index, layero){
-                            $("#categoryName").val(data.name);
-                            $("#categoryAttribute").val(data.level);
-                            $("#categoryUnit").val(data.unit);
+                            $("#name").val(data.name);
+                            $("#unit").val(data.unit);
                         },
                         yes:function(index, layero){
                             /*  $.ajaxSettings.async = false; */
@@ -263,9 +235,10 @@
                                 url: 'edit',
                                 data: {
                                     id: data.id,
-                                    name: $('#categoryName').val(),
-                                    level: $('#categoryAttribute').val(),
-                                    unit: $('#categoryUnit').val()
+                                    name: $('#name').val(),
+                                    parId: curParId,
+                                    level: curLevel,
+                                    unit: $('#unit').val()
                                 },
                                 dataType: "JSON",
                                 success: function(data){
@@ -292,26 +265,25 @@
                         }
                     });
                 } else if(obj.event === 'readSubLevel'){
-                    curLevel = curLevel + 1;
-                    var curParId = data.id;
+                    curParId = data.id;
                     if (curLevel < 3) {
-                        levelArr.push(curLevel);
                         parIdArr.push(curParId);
+                        curLevel = curLevel + 1;
                     }
-                    if (curLevel > 1) {
-                        $("#backLevel").show();
-                    } else {
+
+                    if (curLevel <= 1) {
                         $("#backLevel").hide();
-                    }
-                    if (curLevel == 2) {
-                        $(".aa").hide();
-                        console.log("触发");
                     } else {
-                        $(".aa").show();
+                        $("#backLevel").show();
                     }
-                    //
-                    console.log("当前 curLevel:", curLevel, " parId:", data.id)
-                    console.log("levelArr:", levelArr.join(","), " parIdArr:", parIdArr.join(","));
+
+                    if (curLevel > 3) {
+                        console.log("max level!");
+                        return false;
+                    }
+
+                    console.log("curLevel:", curLevel, " curParId:", curParId);
+                    console.log("parIdArr:", parIdArr.join(","));
                     table.reload('tableData', {
                         where: {
                             "level": curLevel,
@@ -321,118 +293,24 @@
                 }
             });
 
-            form.on('select(level)', function(data){
-                $("#par2").empty();
-                $("#par3").empty();
-
-                var level = data.value;
-                if (level == 1) {
-                    $("#parBox1").show();
-                    $("#parBox2").hide();
-                    $("#parBox3").hide();
-                } else if (level == 2) {
-                    $("#parBox1").show();
-                    $("#parBox2").show();
-                    $("#parBox3").hide();
-                } else if (level == 3) {
-                    $("#parBox1").show();
-                    $("#parBox2").show();
-                    $("#parBox3").show();
-                }
-            });
-
-            form.on('select(par1)', function(data){
-                $("#par2").empty();
-                $("#par2").append(new Option("二级分类", ""));
-                $("#par3").empty();
-                $("#par3").append(new Option("三级分类", ""));
-                //data.value 得到被选中的值
-                var parId = data.value;
-                $.ajax({
-                    type: "POST",
-                    url: ctx + 'category/listByLevel',
-                    dataType: "JSON",
-                    data: {
-                        level: 2,
-                        parId: parId
-                    },
-                    success: function(data){
-                        console.log(data);
-                        if (data.code == 0) {
-                            $.each(data.data, function(index, item){
-                                $("#par2").append(new Option(item.name, item.id));
-                            });
-                            layui.form.render("select");
-                        } else {
-                            layer.alert('二级分类列表加载失败', {icon:2, title:'提示'}, function(i){
-                                layer.close(i);
-                            })
-                        }
-                    },
-                    error:function(){
-                        layer.alert("本次操作失败，请重新操作！", {icon:5, title:'错误'});
-                        return false;
-                    }
-                })
-
-            });
-
-            form.on('select(par2)', function(data){
-                $("#par3").empty();
-                $("#par3").append(new Option("三级分类", ""));
-                //data.value 得到被选中的值
-                var parId = data.value;
-                $.ajax({
-                    type: "POST",
-                    url: ctx + 'category/listByLevel',
-                    dataType: "JSON",
-                    data: {
-                        level: 3,
-                        parId: parId
-                    },
-                    success: function(data){
-                        console.log(data);
-                        if (data.code == 0) {
-                            $.each(data.data, function(index, item){
-                                $("#par3").append(new Option(item.name, item.id));
-                            });
-                            layui.form.render("select");
-                        } else {
-                            layer.alert('三级分类列表加载失败', {icon:2, title:'提示'}, function(i){
-                                layer.close(i);
-                            })
-                        }
-                    },
-                    error:function(){
-                        layer.alert("本次操作失败，请重新操作！", {icon:5, title:'错误'});
-                        return false;
-                    }
-                })
-
-            });
-
             $("#backLevel").click(function () {
                 if (curLevel > 1) {
                     curLevel = curLevel - 1;
+                    parIdArr.pop();
                 }
+                curParId = parIdArr[curLevel - 1];
                 if (curLevel > 1) {
                     $("#backLevel").show();
                 } else {
                     $("#backLevel").hide();
                 }
-                if (curLevel == 2) {
-                    $(".aa").hide();
-                    console.log("触发");
-                } else {
-                    $(".aa").show();
-                }
-                var lastLevel = levelArr.pop();
-                var lastParId = parIdArr.pop();
-                console.log("lastLevel:", lastLevel, " lastParId:", lastParId);
+
+                console.log("curLevel:", curLevel, " curParId:", curParId);
+                console.log("parIdArr:", parIdArr.join(","));
                 table.reload('tableData', {
                     where: {
-                        "level": lastLevel,
-                        "parId": lastParId
+                        "level": curLevel,
+                        "parId": curParId
                     }
                 });
             })
