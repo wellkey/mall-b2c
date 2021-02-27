@@ -40,9 +40,9 @@ public class ProductServiceImpl implements ProductService {
         List<AttributeCombo> comboList = new ArrayList<>();
 
         LOGGER.info("列出所有key categoryId:" + categoryId);
-        List<Attribute> attributeList = productDao.listAttrKey(categoryId);
-        if (attributeList != null && attributeList.size() > 0) {
-            for (Attribute attr : attributeList) {
+        List<AttributeKey> attributeKeyList = productDao.listAttrKey(categoryId);
+        if (attributeKeyList != null && attributeKeyList.size() > 0) {
+            for (AttributeKey attr : attributeKeyList) {
                 AttributeCombo combo = new AttributeCombo();
                 combo.setAttributeKeyId(attr.getId());
                 combo.setAttributeKeyValue(attr.getName());

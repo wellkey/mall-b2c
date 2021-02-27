@@ -221,6 +221,7 @@
                 active[type] ? active[type].call(this) : '';
             });
 
+            var categoryId;
             //监听行工具事件
             table.on('tool(attribute)', function(obj){
                 var data = obj.data;
@@ -259,7 +260,6 @@
                 } else if(obj.event === 'edit'){
                     $('#selectedBox').show();
                     $('#categoryBox').hide();
-                    var categoryId;
                     layer.open({
                         type: 1,
                         area: '550px',
@@ -301,8 +301,8 @@
                                 url: 'edit',
                                 data: {
                                     id: data.id,
-                                    categoryId: categoryId,
-                                    name: $('#attributeName').val()
+                                    name: $('#attributeName').val(),
+                                    categoryId: categoryId
                                 },
                                 dataType: "JSON",
                                 success: function(data){
@@ -369,7 +369,7 @@
                                 url: 'saveOrUpdateValues',
                                 dataType: "JSON",
                                 data: {
-                                    id: data.id,
+                                    attributeId: data.id,
                                     values: $('#valueList').val()
                                 },
                                 success: function(data){
@@ -403,6 +403,7 @@
                 $("#level3").append(new Option("三级分类", ""));
                 //data.value 得到被选中的值
                 var parId = data.value;
+                categoryId = parId;
                 $.ajax({
                     type: "POST",
                     url: ctx + 'category/listByLevel',
@@ -437,6 +438,7 @@
                 $("#level3").append(new Option("三级分类", ""));
                 //data.value 得到被选中的值
                 var parId = data.value;
+                categoryId = parId;
                 $.ajax({
                     type: "POST",
                     url: ctx + 'category/listByLevel',

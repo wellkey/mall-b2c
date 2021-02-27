@@ -3,7 +3,7 @@ package com.pzh.mall.module.controller;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.pzh.mall.common.ResultMsg;
-import com.pzh.mall.module.domain.Attribute;
+import com.pzh.mall.module.domain.AttributeKey;
 import com.pzh.mall.module.domain.AttributeValue;
 import com.pzh.mall.module.domain.CategoryAttribute;
 import com.pzh.mall.module.service.AttributeService;
@@ -49,8 +49,8 @@ public class AttributeController {
         ResultMsg resultMsg = new ResultMsg();
         try {
             PageHelper.startPage(page, limit);
-            List<Attribute> list = attributeService.list(name);
-            PageInfo<Attribute> pageInfo = new PageInfo<>(list);
+            List<AttributeKey> list = attributeService.list(name);
+            PageInfo<AttributeKey> pageInfo = new PageInfo<>(list);
             resultMsg.setData(pageInfo.getList());
             resultMsg.setCount(pageInfo.getTotal());
         } catch (Exception e) {
@@ -68,8 +68,8 @@ public class AttributeController {
         LOGGER.info("id:" + id);
         ResultMsg resultMsg = new ResultMsg();
         try {
-            Attribute attribute = attributeService.read(id);
-            resultMsg.setData(attribute);
+            AttributeKey attributeKey = attributeService.read(id);
+            resultMsg.setData(attributeKey);
         } catch (Exception e) {
             e.printStackTrace();
             resultMsg.setCode(-1);
@@ -81,11 +81,11 @@ public class AttributeController {
 
     @RequestMapping("/add")
     @ResponseBody
-    public ResultMsg add(Attribute attribute) {
-        LOGGER.info("attribute:" + attribute);
+    public ResultMsg add(String name, @RequestParam(defaultValue = "0")long categoryId) {
+        LOGGER.info("属性key新增 name:" + name + " categoryId:" + categoryId);
         ResultMsg resultMsg = new ResultMsg();
         try {
-            attributeService.add(attribute);
+            attributeService.add(name, categoryId);
         } catch (Exception e) {
             e.printStackTrace();
             resultMsg.setCode(-1);
@@ -97,11 +97,11 @@ public class AttributeController {
 
     @RequestMapping("/edit")
     @ResponseBody
-    public ResultMsg edit(Attribute attribute) {
-        LOGGER.info("Attribute:" + attribute);
+    public ResultMsg edit(@RequestParam(defaultValue = "0")long id, String name, @RequestParam(defaultValue = "0")long categoryId) {
+        LOGGER.info("属性key修改 id:" + id + " name:" + name + " categoryId:" + categoryId);
         ResultMsg resultMsg = new ResultMsg();
         try {
-            attributeService.edit(attribute);
+            attributeService.edit(id, name, categoryId);
         } catch (Exception e) {
             e.printStackTrace();
             resultMsg.setCode(-1);
@@ -129,16 +129,16 @@ public class AttributeController {
 
     @RequestMapping("/getCategoryAttribute")
     @ResponseBody
-    public ResultMsg getCategoryAttribute(@RequestParam long attributeId, @RequestParam long categoryId) {
+    public ResultMsg getCategoryAttribute(@RequestParam(defaultValue = "0")long attributeId, @RequestParam(defaultValue = "0")long categoryId) {
         LOGGER.info("attributeId:" + attributeId + " categoryId:" + categoryId);
         ResultMsg resultMsg = new ResultMsg();
         try {
             String str = attributeService.getCategoryStr(categoryId);
-            Attribute attribute = attributeService.read(attributeId);
+            AttributeKey attributeKey = attributeService.read(attributeId);
             CategoryAttribute ca = new CategoryAttribute();
             ca.setCategoryStr(str);
-            ca.setAttributeName(attribute.getName());
-            ca.setCategoryId(attribute.getCategoryId());
+            ca.setAttributeName(attributeKey.getName());
+            ca.setCategoryId(attributeKey.getCategoryId());
             resultMsg.setData(ca);
         } catch (Exception e) {
             e.printStackTrace();
@@ -151,20 +151,12 @@ public class AttributeController {
 
     @RequestMapping("/saveOrUpdateValues")
     @ResponseBody
-    public ResultMsg saveOrUpdateValues(long id, String values) {
-        LOGGER.info("id:" + id + " values:" + values);
+    public ResultMsg saveOrUpdateValues(long attributeId, String values) {
+        LOGGER.info("attributeId:" + attributeId + " values:" + values);
         ResultMsg resultMsg = new ResultMsg();
         try {
             if (values != null && values.length() > 0) {
-                String[] strs = values.split(",");
-                if (strs.length > 0) {
-                    AttributeValue value = new AttributeValue();
-                    value.setAttributeId(id);
-                    for (String str : strs) {
-                        value.setAttributeValue(str);
-                        attributeService.saveOrUpdateValues(value);
-                    }
-                }
+                attributeService.saveOrUpdateValues(attributeId, values);
             }
         } catch (Exception e) {
             e.printStackTrace();

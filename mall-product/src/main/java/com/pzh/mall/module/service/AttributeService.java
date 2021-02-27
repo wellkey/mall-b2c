@@ -1,6 +1,6 @@
 package com.pzh.mall.module.service;
 
-import com.pzh.mall.module.domain.Attribute;
+import com.pzh.mall.module.domain.AttributeKey;
 import com.pzh.mall.module.domain.AttributeValue;
 
 import java.util.List;
@@ -13,19 +13,19 @@ import java.util.List;
  */
 public interface AttributeService {
 
-    List<Attribute> list(String name);
+    List<AttributeKey> list(String name);
 
-    Attribute read(long id);
+    AttributeKey read(long id);
 
-    void add(Attribute brand);
+    void add(String name, long categoryId);
 
-    void edit(Attribute brand);
+    void edit(long id, String name, long categoryId);
 
     void remove(long id);
 
     String getCategoryStr(Long categoryId);
 
-    AttributeValue saveOrUpdateValues(AttributeValue value);
+    void saveOrUpdateValues(long attributeId, String values);
 
     List<AttributeValue> readValues(long attributeId);
 }

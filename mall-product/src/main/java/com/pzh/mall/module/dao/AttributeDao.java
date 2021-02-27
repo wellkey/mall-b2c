@@ -1,6 +1,6 @@
 package com.pzh.mall.module.dao;
 
-import com.pzh.mall.module.domain.Attribute;
+import com.pzh.mall.module.domain.AttributeKey;
 import com.pzh.mall.module.domain.AttributeValue;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -16,17 +16,19 @@ import java.util.List;
 @Mapper
 public interface AttributeDao {
 
-    List<Attribute> list(@Param("name") String name);
+    List<AttributeKey> list(@Param("name") String name);
 
-    Attribute read(long id);
+    AttributeKey read(long id);
 
-    void add(Attribute brand);
+    void add(@Param("name")String name, @Param("categoryId")long categoryId);
 
-    void edit(Attribute brand);
+    void edit(@Param("id")long id, @Param("name")String name, @Param("categoryId")long categoryId);
 
     void remove(long id);
 
-    AttributeValue saveOrUpdateValues(AttributeValue value);
+    void removeValues(@Param("attributeId") long attributeId);
+
+    void saveOrUpdateValues(@Param("attributeId") long attributeId, @Param("attributeValue") String attributeValue);
 
     List<AttributeValue> readValues(@Param("attributeId") long attributeId);
 }

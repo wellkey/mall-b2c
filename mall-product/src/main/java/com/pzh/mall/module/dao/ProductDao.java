@@ -1,6 +1,6 @@
 package com.pzh.mall.module.dao;
 
-import com.pzh.mall.module.domain.Attribute;
+import com.pzh.mall.module.domain.AttributeKey;
 import com.pzh.mall.module.domain.AttributeValue;
 import com.pzh.mall.module.domain.Product;
 import com.pzh.mall.module.domain.ProductItem;
@@ -22,7 +22,7 @@ public interface ProductDao {
 
     void add(Product product);
 
-    List<Attribute> listAttrKey(@Param("categoryId") long categoryId);
+    List<AttributeKey> listAttrKey(@Param("categoryId") long categoryId);
 
     List<AttributeValue> listAttrValuesByKey(@Param("productId") long productId, @Param("attributeId") long attributeId);
 

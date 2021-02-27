@@ -8,7 +8,7 @@ import java.io.Serializable;
  * @Date 2020/10/21 15:32
  * @Version 1.0
  */
-public class Attribute implements Serializable {
+public class AttributeKey implements Serializable {
     private static final long serialVersionUID = 2186437324848557416L;
 
     private Long id;
@@ -63,7 +63,7 @@ public class Attribute implements Serializable {
 
     @Override
     public String toString() {
-        return "Attribute{" +
+        return "AttributeKey{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", categoryId=" + categoryId +
