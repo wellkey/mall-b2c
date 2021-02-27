@@ -1,7 +1,7 @@
 /*
 Navicat MySQL Data Transfer
 
-Source Server         : localhost
+Source Server         : local
 Source Server Version : 50732
 Source Host           : localhost:3306
 Source Database       : mall
@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50732
 File Encoding         : 65001
 
-Date: 2020-11-18 15:24:07
+Date: 2021-02-27 16:27:37
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -27,7 +27,7 @@ CREATE TABLE `pms_category` (
   `unit` varchar(4) DEFAULT '' COMMENT '计量单位',
   `insert_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '插入时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1016 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=1027 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of pms_category
@@ -43,3 +43,11 @@ INSERT INTO `pms_category` VALUES ('1012', '裙子', '1010', '3', '条', '2020-1
 INSERT INTO `pms_category` VALUES ('1013', '风衣', '1010', '3', '件', '2020-11-06 16:16:08');
 INSERT INTO `pms_category` VALUES ('1014', '长裤', '1009', '3', '条', '2020-11-06 16:16:26');
 INSERT INTO `pms_category` VALUES ('1015', '夹克', '1009', '3', '件', '2020-11-06 16:16:39');
+INSERT INTO `pms_category` VALUES ('1018', '食品酒饮', '0', '1', '件', '2021-02-27 09:30:20');
+INSERT INTO `pms_category` VALUES ('1019', '母婴', '0', '1', '件', '2021-02-27 09:40:50');
+INSERT INTO `pms_category` VALUES ('1020', '休闲食品', '1018', '2', '件', '2021-02-27 09:41:20');
+INSERT INTO `pms_category` VALUES ('1021', '进口食品', '1018', '2', '件', '2021-02-27 09:41:32');
+INSERT INTO `pms_category` VALUES ('1022', '膨化食品', '1020', '3', '件', '2021-02-27 09:42:02');
+INSERT INTO `pms_category` VALUES ('1024', '糖果/巧克力', '1021', '3', '件', '2021-02-27 09:43:08');
+INSERT INTO `pms_category` VALUES ('1025', '方便食品', '1021', '3', '件', '2021-02-27 09:43:29');
+INSERT INTO `pms_category` VALUES ('1026', '油', '1021', '3', '瓶', '2021-02-27 09:43:41');

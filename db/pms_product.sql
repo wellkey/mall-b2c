@@ -1,7 +1,7 @@
 /*
 Navicat MySQL Data Transfer
 
-Source Server         : localhost
+Source Server         : local
 Source Server Version : 50732
 Source Host           : localhost:3306
 Source Database       : mall
@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50732
 File Encoding         : 65001
 
-Date: 2020-11-18 15:24:27
+Date: 2021-02-27 16:27:44
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -22,7 +22,7 @@ DROP TABLE IF EXISTS `pms_product`;
 CREATE TABLE `pms_product` (
   `id` int(16) unsigned NOT NULL AUTO_INCREMENT COMMENT 'id',
   `name` varchar(20) DEFAULT '' COMMENT '产品名',
-  `pic` varchar(100) DEFAULT '' COMMENT '产品图片地址',
+  `pic` varchar(100) DEFAULT NULL COMMENT '产品图片地址',
   `brand_id` int(16) DEFAULT NULL COMMENT '品牌id',
   `category_id` int(16) DEFAULT NULL COMMENT '分类id',
   `description` varchar(200) DEFAULT '' COMMENT '产品描述',
@@ -31,10 +31,11 @@ CREATE TABLE `pms_product` (
   `publish_status` tinyint(1) DEFAULT '0' COMMENT '上架标志 0：未上架 1：已上架',
   `insert_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '插入时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of pms_product
 -- ----------------------------
 INSERT INTO `pms_product` VALUES ('1', '华为 HUAWEI P20', '', '1', '1007', '眼界大开', '0', '0', '0', '2020-10-22 14:08:14');
 INSERT INTO `pms_product` VALUES ('2', '小米8', '', '2', '1007', '全面屏游戏智能手机', '0', '0', '0', '2020-10-22 16:45:35');
+INSERT INTO `pms_product` VALUES ('4', '红米Note8', '/img2021/02/26/1614322525058.jpg', '2', '1007', 'Red MI Note8', '0', '0', '0', '2021-02-26 14:55:57');
