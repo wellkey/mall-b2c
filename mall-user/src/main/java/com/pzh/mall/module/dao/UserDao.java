@@ -2,7 +2,7 @@ package com.pzh.mall.module.dao;
 
 import com.pzh.mall.module.domain.User;
 import org.apache.ibatis.annotations.Mapper;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -30,7 +30,7 @@ public interface UserDao {
      * @param email
      * @param nickName
      */
-    void add(@RequestParam String userName, @RequestParam String password, @RequestParam String icon, @RequestParam String email, @RequestParam String nickName);
+    void add(@Param("userName") String userName, @Param("password") String password, @Param("icon") String icon, @Param("email") String email, @Param("nickName") String nickName);
 
     /**
      * 删除用户
