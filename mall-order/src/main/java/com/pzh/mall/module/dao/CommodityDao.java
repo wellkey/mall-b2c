@@ -37,15 +37,17 @@ public interface CommodityDao {
 
     /**
      * +1
+     * @param cartId
      * @param itemId
      */
-    void oneMore(long itemId);
+    void oneMore(@Param("cartId") long cartId, @Param("itemId") long itemId);
 
     /**
      * -1
+     * @param cartId
      * @param itemId
      */
-    void oneLess(long itemId);
+    void oneLess(@Param("cartId") long cartId, @Param("itemId") long itemId);
 
     /**
      * 从购物车中移除
@@ -60,4 +62,12 @@ public interface CommodityDao {
      * @return
      */
     long getCartId(long userId);
+
+    /**
+     * 获取购物车指定商品数
+     * @param cartId
+     * @param itemId
+     * @return
+     */
+    Integer getQuantity(@Param("cartId") long cartId, @Param("itemId") long itemId);
 }

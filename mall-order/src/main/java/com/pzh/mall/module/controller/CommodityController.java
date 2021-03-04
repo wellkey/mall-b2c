@@ -99,7 +99,7 @@ public class CommodityController {
         LOGGER.info("商品 " + itemId + " +1");
         ResultMsg resultMsg = new ResultMsg();
         try {
-            commodityService.oneMore(itemId);
+            commodityService.oneMore(1002, itemId);
         } catch (Exception e) {
             e.printStackTrace();
             resultMsg.setCode(-1);
@@ -115,7 +115,7 @@ public class CommodityController {
         LOGGER.info("商品 " + itemId + " -1");
         ResultMsg resultMsg = new ResultMsg();
         try {
-            commodityService.oneLess(itemId);
+            commodityService.oneLess(1002, itemId);
         } catch (Exception e) {
             e.printStackTrace();
             resultMsg.setCode(-1);

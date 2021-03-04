@@ -19,7 +19,7 @@
     <select id="listCartItem" resultType="com.pzh.mall.module.domain.CartItem">
         SELECT d.id itemId, c.`name` itemName, d.product_specs productSpecs, d.pic, d.price, b.quantity
         FROM oms_cart a LEFT JOIN oms_cart_item b ON a.id = b.cart_id LEFT JOIN pms_product_item d ON d.id = b.item_id LEFT JOIN pms_product c ON c.id = d.product_id
-        WHERE a.user_id = #{userId} ORDER BY b.insert_time DESC
+        WHERE a.user_id = #{userId} AND b.quantity > 0 ORDER BY b.insert_time DESC
     </select>
 
     <update id="toCart">
@@ -27,11 +27,11 @@
     </update>
 
     <update id="oneMore">
-        UPDATE oms_cart_item t SET t.quantity = t.quantity + 1 WHERE t.item_id = #{itemId}
+        UPDATE oms_cart_item t SET t.quantity = t.quantity + 1 WHERE cart_id = #{cartId} AND t.item_id = #{itemId}
     </update>
 
     <update id="oneLess">
-        UPDATE oms_cart_item t SET t.quantity = t.quantity - 1 WHERE t.item_id = #{itemId}
+        UPDATE oms_cart_item t SET t.quantity = t.quantity - 1 WHERE cart_id = #{cartId} AND t.item_id = #{itemId}
     </update>
 
     <delete id="delItem">
@@ -40,5 +40,9 @@
 
     <select id="getCartId" resultType="long">
         SELECT t.id FROM oms_cart t WHERE t.user_id = #{userId}
+    </select>
+
+    <select id="getQuantity" resultType="integer">
+        SELECT IFNULL(t.quantity, 0) FROM oms_cart_item t WHERE t.cart_id = #{cartId} AND t.item_id = #{itemId}
     </select>
 </mapper>

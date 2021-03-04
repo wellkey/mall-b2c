@@ -5,7 +5,6 @@ import com.pzh.mall.module.domain.Commodity;
 import com.pzh.mall.module.service.CommodityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -34,21 +33,32 @@ public class CommodityServiceImpl implements CommodityService {
     @Override
     public void toCart(long userId, long itemId) {
         long cartId = commodityDao.getCartId(userId);
-        commodityDao.toCart(cartId, itemId);
+        Integer tmp = commodityDao.getQuantity(cartId, itemId);
+        int quantity = tmp == null ? 0 : tmp;
+        if (quantity < 1) {
+            commodityDao.toCart(cartId, itemId);
+        } else {
+            commodityDao.oneMore(cartId, itemId);
+        }
     }
 
 
     @Override
-    public void oneMore(long itemId) {
-        commodityDao.oneMore(itemId);
+    public void oneMore(long userId, long itemId) {
+        long cartId = commodityDao.getCartId(userId);
+        commodityDao.oneMore(cartId, itemId);
     }
 
     @Override
-    public void oneLess(long itemId) {
-        commodityDao.oneLess(itemId);
+    public void oneLess(long userId, long itemId) {
+        long cartId = commodityDao.getCartId(userId);
+        Integer tmp = commodityDao.getQuantity(cartId, itemId);
+        int quantity = tmp == null ? 0 : tmp;
+        if (quantity > 1) {
+            commodityDao.oneLess(cartId, itemId);
+        }
     }
 
-    @Transactional
     @Override
     public void delItem(long userId, long itemId) {
         long cartId = commodityDao.getCartId(userId);

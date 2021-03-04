@@ -30,15 +30,17 @@ public interface CommodityService {
 
     /**
      * +1
+     * @param cartId
      * @param itemId
      */
-    void oneMore(long itemId);
+    void oneMore(long cartId, long itemId);
 
     /**
      * -1
+     * @param cartId
      * @param itemId
      */
-    void oneLess(long itemId);
+    void oneLess(long cartId, long itemId);
 
     /**
      * 从购物车中移除
