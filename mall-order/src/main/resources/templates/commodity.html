@@ -117,6 +117,7 @@
                 active[type] ? active[type].call(this) : '';
             });
 
+            var itemIds = [];
             $("#myCart").on('click', function () {
                 console.log("点击我的购物车")
                 layer.open({
@@ -129,68 +130,52 @@
                     maxmin: true,
                     content:$('#cart'),
                     success: function(layero, index){
-                        $.ajax({
-                            type: "POST",
+                        table.render({
+                            elem: '#cartTable',
                             url: 'listCartItem',
-                            data: {},
-                            dataType: "JSON",
-                            success: function(data){
-                                console.log(data);
-                                if (data.code == 0) {
-                                    console.log(data.data);
-                                    table.render({
-                                        elem: '#cartTable',
-                                        url: 'listCartItem',
-                                        method: 'post', //方式
-                                        page: false, //开启分页
-                                        loading: true, //翻页加loading
-                                        where: {
+                            method: 'post', //方式
+                            page: false, //开启分页
+                            loading: true, //翻页加loading
+                            where: {
 
-                                        },
-                                        id: 'cartData',
-                                        cols: [ //表头
-                                            [{
-                                                type:'checkbox'
-                                            }, {
-                                                title: '序号',
-                                                width: 50,
-                                                templet: function (d) {
-                                                    return d.LAY_TABLE_INDEX + 1
-                                                }
-                                            }, {
-                                                field: 'itemName',
-                                                title: '商品名称',
-                                                width: 150
-                                            },{
-                                                field: 'productSpecs',
-                                                title: '商品属性',
-                                                width: 100
-                                            }, {
-                                                field: 'pic',
-                                                title: '商品图片',
-                                                width: 120
-                                            },{
-                                                field: 'price',
-                                                title: '价格',
-                                                width: 80
-                                            }, {
-                                                field: 'quantity',
-                                                title: '数量',
-                                                width: 50
-                                            }, {
-                                                title: '操作',
-                                                toolbar: '#cartBar',
-                                                width: 160
-                                            }]
-                                        ]
-                                    });
-                                }
                             },
-                            error:function(){
-                                layer.alert("本次操作失败，请重新操作！", {icon:5, title:'错误'});
-                                return false;
-                            }
-                        })
+                            id: 'cartData',
+                            cols: [ //表头
+                                [{
+                                    type:'checkbox'
+                                }, {
+                                    title: '序号',
+                                    width: 50,
+                                    templet: function (d) {
+                                        return d.LAY_TABLE_INDEX + 1
+                                    }
+                                }, {
+                                    field: 'itemName',
+                                    title: '商品名称',
+                                    width: 150
+                                },{
+                                    field: 'productSpecs',
+                                    title: '商品属性',
+                                    width: 100
+                                }, {
+                                    field: 'pic',
+                                    title: '商品图片',
+                                    width: 120
+                                },{
+                                    field: 'price',
+                                    title: '价格',
+                                    width: 80
+                                }, {
+                                    field: 'quantity',
+                                    title: '数量',
+                                    width: 50
+                                }, {
+                                    title: '操作',
+                                    toolbar: '#cartBar',
+                                    width: 160
+                                }]
+                            ]
+                        });
                     },
                     yes:function(index, layero){
                         /*  $.ajaxSettings.async = false; */
@@ -206,6 +191,14 @@
                         console.log(checkStatus.data) //获取选中行的数据即 多个行对象
                         console.log(checkStatus.data.length) //获取选中行数量，可作为是否有选中行的条件
                         console.log(checkStatus.isAll ) //表格是否全选
+
+                        var itemData = checkStatus.data;
+                        for (var i = 0; i < itemData.length; i++) {
+                            itemIds.push(itemData[i].itemId);
+                        }
+                        console.log("itemIds", itemIds.join(","))
+
+                        window.location.href = ctx + "myOrder/index/" + itemIds;
                     },
                     cancel: function(index, layero) {
                         layer.close(index);//关闭弹出层
