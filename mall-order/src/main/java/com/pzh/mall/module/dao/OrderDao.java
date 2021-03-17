@@ -30,9 +30,8 @@ public interface OrderDao {
      * @param postFee
      * @param userId
      * @param userNote
-     * @return 自增长id
      */
-    long saveOrder(BigDecimal payment, BigDecimal postFee, long userId, String userNote);
+    void saveOrder(long id, BigDecimal payment, BigDecimal postFee, long userId, String userNote);
 
     /**
      * 保存订单商品
@@ -55,4 +54,18 @@ public interface OrderDao {
      * @return
      */
     List<CartItem> showDetail(long orderId);
+
+    /**
+     * 根据id获取订单
+     * @param id
+     * @return
+     */
+    Order getOrderById(long id);
+
+    /**
+     * 根据id更新订单状态
+     * @param id
+     * @param status
+     */
+    void updateOrderStatus(long id, int status);
 }

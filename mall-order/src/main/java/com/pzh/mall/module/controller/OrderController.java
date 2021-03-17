@@ -1,9 +1,11 @@
 package com.pzh.mall.module.controller;
 
 import com.pzh.mall.common.ResultMsg;
+import com.pzh.mall.module.delay.DelaySender;
 import com.pzh.mall.module.domain.CartItem;
 import com.pzh.mall.module.domain.Order;
 import com.pzh.mall.module.service.OrderService;
+import com.pzh.mall.util.IdWorker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +37,9 @@ public class OrderController {
 
     @Autowired
     private OrderService orderService;
+
+    @Autowired
+    private DelaySender delaySender;
 
     @RequestMapping("/index/{itemIds}")
     public String index(Model model, @PathVariable String itemIds) {
@@ -108,7 +113,12 @@ public class OrderController {
                 LOGGER.info("免邮");
             }
 
-            orderService.saveOrder(payment, postFee, 1002, userNote, itemList);
+            IdWorker worker = new IdWorker(1,1,1);
+            long id = worker.nextId();
+            LOGGER.info("生成订单id:" + id);
+            orderService.saveOrder(id, payment, postFee, 1002, userNote, itemList);
+
+            delaySender.send(String.valueOf(id), 20000);
         } catch (Exception e) {
             e.printStackTrace();
             resultMsg.setCode(-1);

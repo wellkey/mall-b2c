@@ -33,13 +33,14 @@ public interface OrderService {
 
     /**
      * 保存订单
+     * @param id
      * @param payment
      * @param postFee
      * @param userId
      * @param userNote
-     * @param itemIdList
+     * @param itemList
      */
-    void saveOrder(BigDecimal payment, BigDecimal postFee, long userId, String userNote, List<Map<Long, Integer>> itemList);
+    void saveOrder(long id, BigDecimal payment, BigDecimal postFee, long userId, String userNote, List<Map<Long, Integer>> itemList);
 
     /**
      * 根据订单状态列出所有订单

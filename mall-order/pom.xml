@@ -11,5 +11,10 @@
 
     <artifactId>mall-order</artifactId>
 
-
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.amqp</groupId>
+            <artifactId>spring-rabbit</artifactId>
+        </dependency>
+    </dependencies>
 </project>

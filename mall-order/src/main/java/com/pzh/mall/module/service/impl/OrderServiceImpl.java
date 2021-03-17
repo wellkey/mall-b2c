@@ -46,14 +46,13 @@ public class OrderServiceImpl implements OrderService {
 
     @Transactional
     @Override
-    public void saveOrder(BigDecimal payment, BigDecimal postFee, long userId, String userNote, List<Map<Long, Integer>> itemList) {
-        long orderId = orderDao.saveOrder(payment, postFee, userId, userNote);
-        LOGGER.info("返回的自增长id:" + orderId);
+    public void saveOrder(long id, BigDecimal payment, BigDecimal postFee, long userId, String userNote, List<Map<Long, Integer>> itemList) {
+        orderDao.saveOrder(id, payment, postFee, userId, userNote);
 
         // 插入订单商品表
         for (Map<Long, Integer> map : itemList) {
             for (Map.Entry<Long, Integer> entry : map.entrySet()) {
-                orderDao.saveOrderItem(entry.getKey(), orderId, entry.getValue());
+                orderDao.saveOrderItem(entry.getKey(), id, entry.getValue());
             }
         }
     }
