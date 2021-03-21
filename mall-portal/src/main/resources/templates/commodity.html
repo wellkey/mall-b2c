@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8" />
+        <title>商品首页</title>
+        <link th:href="@{~/portal/favicon.ico}" rel="shortcut icon">
+        <link th:href="@{~/portal/layui/css/layui.css}" rel="stylesheet" />
+        <link th:href="@{~/portal/css/com.pzh.portal.common.css}" rel="stylesheet" />
+
+        <script th:src="@{~/portal/jquery/jquery-2.1.4.min.js}"></script>
+        <script th:src="@{~/portal/layui/layui.js}"></script>
+    </head>
+
+    <body>
+        <div class="myPage">
+            <div class="myTable">
+                商品名：
+                <div class="layui-inline">
+                    <input type="text" autocomplete="off" class="layui-input" id="name" placeholder="请输入商品名称"/>
+                </div>
+                <button class="layui-btn" data-type="reload">搜索</button>
+
+                <button class="layui-btn" id="myCart">我的购物车</button>
+            </div>
+
+            <table class="layui-hide" id="productTable" lay-filter="commodityFilter"></table>
+        </div>
+
+        <!-- 购物车 -->
+        <div id="cart" style="padding: 4px; display: none;">
+            <table class="layui-hide" id="cartTable" lay-filter="cartFilter"></table>
+        </div>
+
+        <!-- 表格操作按钮 -->
+        <script type="text/html" id="optBar">
+            <a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="toCart">加入购物车</a>
+        </script>
+
+        <!-- 购物车操作按钮 -->
+        <script type="text/html" id="cartBar">
+            <a class="layui-btn layui-btn-xs" lay-event="more">+1</a>
+            <a class="layui-btn layui-btn-xs" lay-event="less">-1</a>
+            <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="delItem">移除</a>
+        </script>
+    </body>
+
+    <script th:inline="javascript">
+        var ctx = [[@{/}]];
+        layui.use(['table'], function() {
+            var table = layui.table;
+
+            // 表格数据载入
+            console.log("ctx:", ctx);
+            table.render({
+                elem: '#productTable',
+                url: 'listForPage',
+                method: 'post', //方式
+                page: true, //开启分页
+                loading: true, //翻页加loading
+                where: {
+
+                },
+                limit: 10, // 每页显示的条数
+                limits: [10, 20, 50], // 每页条数的选择项
+                id: 'tableData',
+                cols: [ //表头
+                    [{
+                        title: '序号',
+                        width: 60,
+                        templet: function (d) {
+                            return d.LAY_TABLE_INDEX + 1
+                        }
+                    }, {
+                        field: 'itemName',
+                        title: '商品名称',
+                        width: 150
+                    },{
+                        field: 'productSpecs',
+                        title: '商品属性',
+                        width: 120
+                    }, {
+                        field: 'pic',
+                        title: '商品图片',
+                        width: 120
+                    },{
+                        field: 'price',
+                        title: '价格',
+                        width: 120
+                    }, {
+                        field: 'stock',
+                        title: '库存',
+                        width: 120
+                    }, {
+                        title: '操作',
+                        toolbar: '#optBar',
+                        width: 120
+                    }]
+                ]
+            });
+
+            var $ = layui.$, active = {
+                reload: function () { // 查询
+                    var name = $('#name').val();
+                    console.log(name);
+                    table.reload('tableData', {
+                        where: {
+                            "name": name
+                        },
+                        page: {
+                            curr: 1
+                        }
+                    });
+                }
+            }
+            $('.myTable .layui-btn').on('click', function () {
+                var type = $(this).data('type');
+                active[type] ? active[type].call(this) : '';
+            });
+
+            var itemIds = [];
+            $("#myCart").on('click', function () {
+                console.log("点击我的购物车")
+                layer.open({
+                    type: 1,
+                    area: '760px',
+                    title: '购物车',
+                    btn: ['结算', '关闭'],
+                    shadeClose: true,
+                    shade: 0,
+                    maxmin: true,
+                    content:$('#cart'),
+                    success: function(layero, index){
+                        table.render({
+                            elem: '#cartTable',
+                            url: 'listCartItem',
+                            method: 'post', //方式
+                            page: false, //开启分页
+                            loading: true, //翻页加loading
+                            where: {
+
+                            },
+                            id: 'cartData',
+                            cols: [ //表头
+                                [{
+                                    type:'checkbox'
+                                }, {
+                                    title: '序号',
+                                    width: 50,
+                                    templet: function (d) {
+                                        return d.LAY_TABLE_INDEX + 1
+                                    }
+                                }, {
+                                    field: 'itemName',
+                                    title: '商品名称',
+                                    width: 150
+                                },{
+                                    field: 'productSpecs',
+                                    title: '商品属性',
+                                    width: 100
+                                }, {
+                                    field: 'pic',
+                                    title: '商品图片',
+                                    width: 120
+                                },{
+                                    field: 'price',
+                                    title: '价格',
+                                    width: 80
+                                }, {
+                                    field: 'quantity',
+                                    title: '数量',
+                                    width: 50
+                                }, {
+                                    title: '操作',
+                                    toolbar: '#cartBar',
+                                    width: 160
+                                }]
+                            ]
+                        });
+                    },
+                    yes:function(index, layero){
+                        /*  $.ajaxSettings.async = false; */
+                        console.log("结算");
+                        var checkStatus = table.checkStatus('cartData'); //demo 即为基础参数 id 对应的值
+
+                        var len = checkStatus.data.length;
+                        if (len < 1) {
+                            layer.alert("请至少选择一项商品！");
+                            return false;
+                        }
+
+                        console.log(checkStatus.data) //获取选中行的数据即 多个行对象
+                        console.log(checkStatus.data.length) //获取选中行数量，可作为是否有选中行的条件
+                        console.log(checkStatus.isAll ) //表格是否全选
+
+                        var itemData = checkStatus.data;
+                        for (var i = 0; i < itemData.length; i++) {
+                            itemIds.push(itemData[i].itemId);
+                        }
+                        console.log("itemIds", itemIds.join(","))
+
+                        window.location.href = ctx + "order/index/" + itemIds;
+                    },
+                    cancel: function(index, layero) {
+                        layer.close(index);//关闭弹出层
+                    }
+                });
+            })
+
+
+            //监听行工具事件
+            table.on('tool(commodityFilter)', function(obj){
+                var data = obj.data;
+                console.log("data:", JSON.stringify(data));
+                if(obj.event === 'toCart'){
+                    $.ajax({
+                        type: "POST",
+                        url: 'toCart/' + data.itemId,
+                        data: {},
+                        dataType: "JSON",
+                        success: function(data){
+                            console.log(data);
+                            if (data.code == 0) {
+                                layer.msg('加入购物车成功', {icon: 1});
+                                table.reload('tableData', {
+                                    where: {
+                                        "name": $('#name').val()
+                                    },
+                                    page: {
+                                        curr: 1
+                                    }
+                                });
+                            } else {
+                                layer.msg('加入购物车失败', {icon: 2});
+                            }
+                        },
+                        error:function(){
+                            layer.alert("本次操作失败，请重新操作！", {icon:5, title:'错误'});
+                            return false;
+                        }
+                    })
+                }
+            });
+
+            table.on('tool(cartFilter)', function(obj){
+                var data = obj.data;
+                console.log("data:", JSON.stringify(data));
+                if(obj.event === 'more'){
+                    console.log("+1")
+                    $.ajax({
+                        type: "POST",
+                        url: 'oneMore/' + data.itemId,
+                        data: {},
+                        dataType: "JSON",
+                        success: function(data){
+                            console.log(data);
+                            if (data.code == 0) {
+                                table.reload('cartData');
+                            }
+                        },
+                        error:function(){
+                            layer.alert("本次操作失败，请重新操作！", {icon:5, title:'错误'});
+                            return false;
+                        }
+                    })
+                } else if (obj.event === 'less') {
+                    console.log("-1")
+                    $.ajax({
+                        type: "POST",
+                        url: 'oneLess/' + data.itemId,
+                        data: {},
+                        dataType: "JSON",
+                        success: function(data){
+                            console.log(data);
+                            if (data.code == 0) {
+                                table.reload('cartData');
+                            }
+                        },
+                        error:function(){
+                            layer.alert("本次操作失败，请重新操作！", {icon:5, title:'错误'});
+                            return false;
+                        }
+                    })
+                } else if (obj.event === 'delItem') {
+                    console.log("从购物车移除")
+                    $.ajax({
+                        type: "POST",
+                        url: 'delItem',
+                        data: {itemId: data.itemId},
+                        dataType: "JSON",
+                        success: function(data){
+                            console.log(data);
+                            if (data.code == 0) {
+                                table.reload('cartData');
+                            }
+                        },
+                        error:function(){
+                            layer.alert("本次操作失败，请重新操作！", {icon:5, title:'错误'});
+                            return false;
+                        }
+                    })
+                }
+            });
+        });
+    </script>
+</html>

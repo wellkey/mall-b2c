@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pzh.portal.module.dao.SecKillDao">
+    <resultMap id="BaseResultMap" type="com.pzh.portal.module.domain.Commodity">
+        <id column="itemId" jdbcType="INTEGER" property="itemId" />
+        <result column="stock" jdbcType="INTEGER" property="stock" />
+    </resultMap>
+
+    <select id="list" resultMap="BaseResultMap">
+        SELECT t.item_id itemId, t.stock FROM oms_sec t WHERE t.act_id = #{actId};
+    </select>
+
+</mapper>

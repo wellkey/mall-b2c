@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8" />
+        <title>订单列表</title>
+        <link th:href="@{~/portal/favicon.ico}" rel="shortcut icon">
+        <link th:href="@{~/portal/layui/css/layui.css}" rel="stylesheet" />
+        <link th:href="@{~/portal/css/com.pzh.portal.common.css}" rel="stylesheet" />
+
+        <script th:src="@{~/portal/jquery/jquery-2.1.4.min.js}"></script>
+        <script th:src="@{~/portal/layui/layui.js}"></script>
+    </head>
+
+    <body>
+        <div class="myPage">
+            <table class="layui-hide" id="orderTable" lay-filter="orderFilter"></table>
+        </div>
+
+        <!-- 订单商品详情 -->
+        <div id="detail" style="padding: 4px; display: none;">
+            <table class="layui-hide" id="detailTable" lay-filter="detailFilter"></table>
+        </div>
+
+        <!-- 表格操作按钮 -->
+        <script type="text/html" id="detailBar">
+            <a class="layui-btn layui-btn-xs" lay-event="showDetail">查看订单商品</a>
+        </script>
+    </body>
+
+    <script th:inline="javascript">
+        var ctx = [[@{/}]];
+        layui.use(['table'], function() {
+            var table = layui.table;
+
+            // 表格数据载入
+            table.render({
+                elem: '#orderTable',
+                url: ctx + 'order/listOrderByStatus',
+                method: 'post', //方式
+                page: false, //开启分页
+                loading: true, //翻页加loading
+                where: {
+                    status: 1
+                },
+                cellMinWidth: 80,
+                id: 'tableData',
+                cols: [ //表头
+                    [{
+                        title: '序号',
+                        width: 60,
+                        templet: function (d) {
+                            return d.LAY_TABLE_INDEX + 1
+                        }
+                    }, {
+                        field: 'createTime',
+                        title: '下单时间',
+                        width: 180
+                    },{
+                        field: 'status',
+                        title: '订单状态',
+                        width: 120,
+                        templet: function (data) {
+                            if(data.status == 1){
+                                return  '未付款';
+                            } else if (data.status == 2) {
+                                return '已付款';
+                            } else if (data.status == 2) {
+                                return '已发货';
+                            } else if (data.status == 2) {
+                                return '交易完成';
+                            } else if (data.status == 2) {
+                                return '交易关闭';
+                            } else {
+                                return '未知状态';
+                            }
+                        }
+                    }, {
+                        field: 'userNote',
+                        title: '买家留言',
+                        width: 150
+                    }, {
+                        title: '订单内容',
+                        toolbar: '#detailBar',
+                        width: 120
+                    }]
+                ]
+            });
+
+            //监听行工具事件
+            table.on('tool(orderFilter)', function(obj){
+                var data = obj.data;
+                console.log("data:", JSON.stringify(data));
+                if(obj.event === 'showDetail'){
+                    layer.open({
+                        type: 1,
+                        area: '760px',
+                        title: '订单详情',
+                        btn: ['关闭'],
+                        shadeClose: true,
+                        shade: 0,
+                        maxmin: true,
+                        content:$('#detail'),
+                        success: function(layero, index){
+                            table.render({
+                                elem: '#detailTable',
+                                url: ctx + 'order/showDetail/' + data.id,
+                                method: 'post', //方式
+                                page: false, //开启分页
+                                loading: true, //翻页加loading
+                                where: {
+
+                                },
+                                id: 'detailData',
+                                cols: [ //表头
+                                    [{
+                                        title: '序号',
+                                        width: 50,
+                                        templet: function (d) {
+                                            return d.LAY_TABLE_INDEX + 1
+                                        }
+                                    }, {
+                                        field: 'itemName',
+                                        title: '商品名称',
+                                        width: 150
+                                    },{
+                                        field: 'productSpecs',
+                                        title: '商品属性',
+                                        width: 100
+                                    }, {
+                                        field: 'pic',
+                                        title: '商品图片',
+                                        width: 120
+                                    },{
+                                        field: 'price',
+                                        title: '价格',
+                                        width: 80
+                                    }, {
+                                        field: 'quantity',
+                                        title: '数量',
+                                        width: 80
+                                    }]
+                                ]
+                            });
+                        },
+                        yes:function(index, layero){
+                            /*  $.ajaxSettings.async = false; */
+                            console.log("关闭");
+                            layer.close(index);//关闭弹出层
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+</html>

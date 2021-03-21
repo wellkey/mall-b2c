@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pzh.manage.module.dao.CategoryDao">
+    <select id="list" resultType="com.pzh.manage.module.domain.Category">
+        SELECT t.id, t.`name`, t.par_id parId, t.`level`, t.unit FROM pms_category t WHERE t.`level` = #{level} AND t.par_id = #{parId}
+        <if test="name != ''">
+            WHERE t.`name` LIKE CONCAT('%',#{name},'%')
+        </if>
+    </select>
+
+    <select id="read" resultType="com.pzh.manage.module.domain.Category">
+        SELECT t.id, t.`name`, t.par_id parId, t.`level`, t.unit FROM pms_category t WHERE t.id = #{id}
+    </select>
+
+    <insert id="add" parameterType="com.pzh.manage.module.domain.Category" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO pms_category(name, par_id, level, unit) VALUES (#{name}, #{parId}, #{level}, #{unit})
+    </insert>
+
+    <update id="edit" parameterType="com.pzh.manage.module.domain.Category">
+        UPDATE pms_category t SET t.`name` = #{name}, t.par_id = #{parId}, t.level = #{level}, t.unit = #{unit} WHERE t.id = #{id}
+    </update>
+
+    <delete id="remove">
+        DELETE FROM pms_category WHERE id = #{id}
+    </delete>
+
+</mapper>

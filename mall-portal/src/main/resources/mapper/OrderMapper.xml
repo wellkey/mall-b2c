@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pzh.portal.module.dao.OrderDao">
+    <resultMap id="BaseResultMap" type="com.pzh.portal.module.domain.Order">
+
+    </resultMap>
+
+    <select id="listItem" resultType="com.pzh.portal.module.domain.CartItem">
+        SELECT d.id itemId, c.`name` itemName, d.product_specs productSpecs, d.pic, d.price, b.quantity
+        FROM oms_cart a LEFT JOIN oms_cart_item b ON a.id = b.cart_id LEFT JOIN pms_product_item d ON d.id = b.item_id LEFT JOIN pms_product c ON c.id = d.product_id
+        WHERE a.user_id = #{userId} AND b.item_id IN
+        <foreach collection="itemIdList" item="id" index="index" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+        AND b.quantity > 0 ORDER BY b.insert_time DESC
+    </select>
+
+    <insert id="saveOrder">
+        INSERT INTO oms_order(id, payment, post_fee, user_id, user_note) VALUES (#{id}, #{payment}, #{postFee}, #{userId}, #{userNote})
+    </insert>
+
+    <insert id="saveOrderItem">
+        INSERT INTO oms_order_item(item_id, order_id, num) VALUES (#{itemId}, #{orderId}, #{num})
+    </insert>
+
+    <select id="listOrderByStatus" resultType="com.pzh.portal.module.domain.Order">
+        SELECT t.id, t.payment, t.payment_type paymentType, t.post_fee postFee, t.`status`, t.create_time createTime, t.payment_time paymentTime, t.consign_time consignTime, t.end_time endTime, t.close_time closeTime, t.user_id userId, t.user_note userNote FROM oms_order t WHERE t.user_id = #{userId} AND t.`status` = #{status} ORDER BY t.create_time DESC
+    </select>
+
+    <select id="showDetail" resultType="com.pzh.portal.module.domain.CartItem">
+        SELECT t.id itemId, p.`name` itemName, t.product_specs productSpecs, t.pic, t.price, o.num quantity FROM pms_product p LEFT JOIN pms_product_item t ON p.id = t.product_id LEFT JOIN oms_order_item o ON t.id = o.item_id WHERE o.order_id = #{orderId}
+    </select>
+
+    <select id="getOrderById" resultType="com.pzh.portal.module.domain.Order">
+        SELECT t.id, t.payment, t.payment_time paymentTime, t.post_fee postFee, t.`status`, t.create_time createTime, t.update_time updateTime, t.payment_time paymentTime, t.consign_time consignTime, t.end_time endTime, t.close_time closeTime, t.user_id userId, t.user_note userNote FROM oms_order t WHERE t.id = #{id}
+    </select>
+
+    <update id="updateOrderStatus">
+        UPDATE oms_order t SET t.`status` = #{status} WHERE t.id = #{id}
+    </update>
+</mapper>

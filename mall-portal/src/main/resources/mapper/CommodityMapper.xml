@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pzh.portal.module.dao.CommodityDao">
+    <resultMap id="BaseResultMap" type="com.pzh.portal.module.domain.Commodity">
+        <id column="itemId" jdbcType="INTEGER" property="itemId" />
+        <result column="itemName" jdbcType="VARCHAR" property="itemName" />
+        <result column="productSpecs" jdbcType="VARCHAR" property="productSpecs" />
+        <result column="pic" jdbcType="VARCHAR" property="pic" />
+        <result column="price" jdbcType="VARCHAR" property="price" />
+        <result column="stock" jdbcType="INTEGER" property="stock" />
+    </resultMap>
+
+    <select id="listForPage" resultMap="BaseResultMap">
+        SELECT b.id itemId, a.`name` itemName, b.product_specs productSpecs, a.pic, b.price, b.stock
+        FROM pms_product a right JOIN pms_product_item b ON b.product_id = a.id
+        WHERE a.delete_status = 0 ORDER BY b.insert_time DESC
+    </select>
+
+    <select id="listCartItem" resultType="com.pzh.portal.module.domain.CartItem">
+        SELECT d.id itemId, c.`name` itemName, d.product_specs productSpecs, d.pic, d.price, b.quantity
+        FROM oms_cart a LEFT JOIN oms_cart_item b ON a.id = b.cart_id LEFT JOIN pms_product_item d ON d.id = b.item_id LEFT JOIN pms_product c ON c.id = d.product_id
+        WHERE a.user_id = #{userId} AND b.quantity > 0 ORDER BY b.insert_time DESC
+    </select>
+
+    <update id="toCart">
+        INSERT INTO oms_cart_item(cart_id, item_id) VALUES (#{cartId}, #{itemId})
+    </update>
+
+    <update id="oneMore">
+        UPDATE oms_cart_item t SET t.quantity = t.quantity + 1 WHERE cart_id = #{cartId} AND t.item_id = #{itemId}
+    </update>
+
+    <update id="oneLess">
+        UPDATE oms_cart_item t SET t.quantity = t.quantity - 1 WHERE cart_id = #{cartId} AND t.item_id = #{itemId}
+    </update>
+
+    <delete id="delItem">
+        DELETE FROM oms_cart_item WHERE cart_id = #{cartId} AND item_id = #{itemId}
+    </delete>
+
+    <select id="getCartId" resultType="long">
+        SELECT t.id FROM oms_cart t WHERE t.user_id = #{userId}
+    </select>
+
+    <select id="getQuantity" resultType="integer">
+        SELECT IFNULL(t.quantity, 0) FROM oms_cart_item t WHERE t.cart_id = #{cartId} AND t.item_id = #{itemId}
+    </select>
+</mapper>
